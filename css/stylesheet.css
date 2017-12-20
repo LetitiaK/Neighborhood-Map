@@ -6,8 +6,21 @@ html,
    padding: 0;
  }
 
+ .menu {
+   width: 60px;
+   height: 60px;
+   padding: 0;
+   margin-left: 0;
+ }
+
+ #upper {
+   width: 340px;
+   background: #000;
+ }
+
  .container {
    height: 100%;
+   width: 90%;
    position: relative;
  }
 
@@ -16,15 +29,17 @@ html,
  }
 
  h1 {
-   color: #525454;
-   font-size: 22px;
+   color: #fff;
+   font-size: 50px;
    margin: 0 0 10px 0;
    text-align: center;
+   font-family: 'Cookie', cursive;
  }
 
  #hide-listings,
  #show-listings {
    width: 48%;
+   background: #7dcdcd;
  }
 
  #map {
@@ -36,9 +51,7 @@ html,
  }
 
  .options-box {
-   background: #fff;
-   border: 1px solid #999;
-   border-radius: 3px;
+   background: #000;
    height: 100%;
    line-height: 35px;
    padding: 10px 10px 30px 10px;

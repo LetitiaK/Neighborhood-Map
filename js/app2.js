@@ -150,31 +150,33 @@ function initMap() {
    geocoder = new google.maps.Geocoder();
 
    geekyPlaces.forEach(function(geekyPlace) {
-     console.log(geekyPlaces[i].address);
-   });
+     var position = geekyPlace.address;
+     var name = geekyPlace.name;
+     var category = geekyPlace.category;
 
-   for (var i = 0; i < geekyPlaces.length; i++) {
-     console.log("I am here");
-     console.log(geekyPlaces[i].address);
-     var position = geekyPlaces[i].address;
-     var name = geekyPlaces[i].name;
-     var category = geekyPlaces[i].category;
+     console.log(position);
+     console.log(name);
+     console.log(category);
 
      geocoder.geocode( {'address': position}, function(results, status) {
        if (status == 'OK') {
-         console.log(results);
          var marker = new google.maps.Marker({
            position: results[0].geometry.location,
-           title: "Hello " + results[0].formatted_address,
+           title: name,
            animation: google.maps.Animation.DROP,
-           id: i
+           id: geekyPlace
          });
 
          markers.push(marker);
-         marker.addListener('click', function() {
-           populateInfoWindow(this, largeInfowindow);
-         });
        }
+
+       for (var i = 0; i < markers.length; i++) {
+         markers[i].setMap(map);
+       }
+
      });
-   }
+
+   });
+
+   // Extend the boundaries of the map for each marker and display the marker
 }

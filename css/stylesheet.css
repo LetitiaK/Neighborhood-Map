@@ -44,7 +44,7 @@ html,
 
  #map {
    bottom:0px;
-   height: 900px;
+   height: 910px;
    left: 362px;
    position: absolute;
    right: 0px;
@@ -52,7 +52,7 @@ html,
 
  .options-box {
    background: #000;
-   height: 900px;
+   height: 910px;
    line-height: 35px;
    padding: 10px 10px 30px 10px;
    text-align: left;

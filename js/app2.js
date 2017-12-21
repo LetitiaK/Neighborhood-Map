@@ -154,11 +154,11 @@ function initMap() {
 
    // Iterate through the list and assingn a marker to each place
    geekyPlaces.forEach(function(geekyPlace) {
-     var position = geekyPlace.address;
+     var address = geekyPlace.address;
      var name = geekyPlace.name;
      var category = geekyPlace.category;
 
-     geocoder.geocode( {'address': position}, function(results, status) {
+     geocoder.geocode( {'address': address}, function(results, status) {
        if (status == 'OK') {
          var marker = new google.maps.Marker({
            position: results[0].geometry.location,
@@ -169,7 +169,7 @@ function initMap() {
 
          markers.push(marker);
          marker.addListener('click', function() {
-           populateInfoWindow(this, largeInfowindow);
+           populateInfoWindow(this, largeInfowindow, address, category);
          });
        }
 
@@ -187,11 +187,10 @@ function initMap() {
    // Extend the boundaries of the map for each marker and display the marker
 }
 
-function populateInfoWindow(marker, infowindow) {
+function populateInfoWindow(marker, infowindow, address, category) {
   if (infowindow.marker != marker) {
-    console.log("I am here");
     infowindow.marker = marker;
-    infowindow.setContent('<div>' + marker.title + '</div>');
+    infowindow.setContent('<div><p>' + marker.title + ' -- ' + category + '</p><p>' + address + '</p></div>');
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function() {
       infowindow.marker = null;

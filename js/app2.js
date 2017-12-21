@@ -145,18 +145,18 @@ function initMap() {
      zoom: 13
    });
 
+   // Add a large info window which shows details of the location
+   var largeInfowindow = new google.maps.InfoWindow();
+
    // Use the Google Maps Geocoding API to allocate the addresses to
    // lat and long values
    geocoder = new google.maps.Geocoder();
 
+   // Iterate through the list and assingn a marker to each place
    geekyPlaces.forEach(function(geekyPlace) {
      var position = geekyPlace.address;
      var name = geekyPlace.name;
      var category = geekyPlace.category;
-
-     console.log(position);
-     console.log(name);
-     console.log(category);
 
      geocoder.geocode( {'address': position}, function(results, status) {
        if (status == 'OK') {
@@ -168,15 +168,33 @@ function initMap() {
          });
 
          markers.push(marker);
+         marker.addListener('click', function() {
+           populateInfoWindow(this, largeInfowindow);
+         });
        }
 
+       // Place the marker on the map and make sure the boundaries fit
+       var bounds = new google.maps.LatLngBounds();
        for (var i = 0; i < markers.length; i++) {
          markers[i].setMap(map);
+         bounds.extend(markers[i].position);
        }
-
+       map.fitBounds(bounds);
      });
 
    });
 
    // Extend the boundaries of the map for each marker and display the marker
+}
+
+function populateInfoWindow(marker, infowindow) {
+  if (infowindow.marker != marker) {
+    console.log("I am here");
+    infowindow.marker = marker;
+    infowindow.setContent('<div>' + marker.title + '</div>');
+    infowindow.open(map, marker);
+    infowindow.addListener('closeclick', function() {
+      infowindow.marker = null;
+    });
+  }
 }

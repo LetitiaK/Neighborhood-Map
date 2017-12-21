@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-   <meta charset="utf-8">
-   <meta name="description" content="Best Geeky Places around Pittsburgh">
-   <meta name="author" content="Letitia Kernschmidt">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta name="theme-color" content="#e0bd79">
-   <title>Pittsburgh4Geeks!</title>
-   <link rel="shortcut icon" type="image/png" href="img/foodlogo.png">
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-   <script async src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-   <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-   <link href="https://fonts.googleapis.com/css?family=Cookie|Raleway" rel="stylesheet">
-   <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
- </head>
- <body>
-   <div class="row">
-     <div class="col-sm-12">
-       <ul data-bind="foreach: geekPlaceList">
-         <li data-bind="text: name"></li>
-       </ul>
-     </div>
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="Best Geeky Places around Pittsburgh">
+    <meta name="author" content="Letitia Kernschmidt">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e0bd79">
+    <title>Pittsburgh4Geeks!</title>
+    <link rel="shortcut icon" type="image/png" href="img/foodlogo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script async src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Cookie|Raleway" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 options-box">
+          <ul class="listing" data-bind="foreach: geekPlaceList">
+            <li data-bind="text: name, click: $parent.setSelectedPlace"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="map"></div>
+        </div>
+      </div>
     </div>
-   <script src="bower_components/knockout/dist/knockout.js"></script>
-   <script src="js/app2.js"></script>
- </body>
+    <script async defer
+     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATSgONzmAWefWf_Rjxkz1Fb3MVWlL8B8M&callback=initMap">
+    </script>
+    <script src="bower_components/knockout/dist/knockout.js"></script>
+    <script src="js/app2.js"></script>
+  </body>
 </html>

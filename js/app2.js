@@ -43,6 +43,11 @@ var myViewModel = function() {
     // Set the current place to be the first item in the observable Array
     this.currentPlace = ko.observable(this.geekPlaceList()[0]);
 
+    // Function to select a place from the list
+    this.setSelectedPlace = function () {
+      console.log("I am here");
+    };
+
 };
 
 // This is the Model (data) of my project
@@ -54,3 +59,14 @@ var GeekPlace = function(geekyPlace) {
 
 // Apply the Bindings
 ko.applyBindings(new myViewModel());
+
+// Create the Google Map
+var map;
+
+function initMap() {
+  console.log("Hello Map");
+   map = new google.maps.Map(document.getElementById('map'), {
+     center: {lat: 40.440625, lng: -79.995886},
+     zoom: 13
+   });
+}

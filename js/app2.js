@@ -3,27 +3,27 @@
 var geekyPlaces = [
   {
     name: 'Eide\'s Entertainment',
-    adress: '1121 Penn Ave, Pittsburgh, PA 15222, USA',
+    address: '1121 Penn Ave, Pittsburgh, PA 15222, USA',
     category: 'Comic Book Shop'
   },
   {
     name: 'Geek Dot Jewelry',
-    adress: '3453 Butler Street, Lawrenceville, PA 15201, USA',
+    address: '3453 Butler Street, Lawrenceville, PA 15201, USA',
     category: 'Jewelry Shop'
   },
   {
     name: 'Carnegie Science Center',
-    adress: '1 Allegheny Ave, Pittsburgh, PA 15212, USA',
+    address: '1 Allegheny Ave, Pittsburgh, PA 15212, USA',
     category: 'Science Museum'
   },
   {
     name: 'Steel City Con',
-    adress: '209 Mall Plaza Blvd, Monroeville, PA 15146, USA',
+    address: '209 Mall Plaza Blvd, Monroeville, PA 15146, USA',
     category: 'Comic Con'
   },
   {
     name: 'Victory Pointe Arcade and Gaming Cafe',
-    adress: '1113 E Carson St, Pittsburgh, PA 15203, USA',
+    address: '1113 E Carson St, Pittsburgh, PA 15203, USA',
     category: 'Cafè and Gambling Hall'
   },
 ];
@@ -60,8 +60,10 @@ var GeekPlace = function(geekyPlace) {
 // Apply the Bindings
 ko.applyBindings(new myViewModel());
 
-// Create the Google Map
+// Create the Google Map and centralize it over Pittsburgh, PA
 var map;
+var geocoder;
+var markers = [];
 
 function initMap() {
     var styles =
@@ -142,4 +144,37 @@ function initMap() {
      styles: styles,
      zoom: 13
    });
+
+   // Use the Google Maps Geocoding API to allocate the addresses to
+   // lat and long values
+   geocoder = new google.maps.Geocoder();
+
+   geekyPlaces.forEach(function(geekyPlace) {
+     console.log(geekyPlaces[i].address);
+   });
+
+   for (var i = 0; i < geekyPlaces.length; i++) {
+     console.log("I am here");
+     console.log(geekyPlaces[i].address);
+     var position = geekyPlaces[i].address;
+     var name = geekyPlaces[i].name;
+     var category = geekyPlaces[i].category;
+
+     geocoder.geocode( {'address': position}, function(results, status) {
+       if (status == 'OK') {
+         console.log(results);
+         var marker = new google.maps.Marker({
+           position: results[0].geometry.location,
+           title: "Hello " + results[0].formatted_address,
+           animation: google.maps.Animation.DROP,
+           id: i
+         });
+
+         markers.push(marker);
+         marker.addListener('click', function() {
+           populateInfoWindow(this, largeInfowindow);
+         });
+       }
+     });
+   }
 }

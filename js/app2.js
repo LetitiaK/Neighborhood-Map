@@ -1,0 +1,56 @@
+// This list contains the 5 places wich I initially chose to be displayed
+// on the map
+var geekyPlaces = [
+  {
+    name: 'Eide\'s Entertainment',
+    adress: '1121 Penn Ave, Pittsburgh, PA 15222, USA',
+    category: 'Comic Book Shop'
+  },
+  {
+    name: 'Geek Dot Jewelry',
+    adress: '3453 Butler Street, Lawrenceville, PA 15201, USA',
+    category: 'Jewelry Shop'
+  },
+  {
+    name: 'Carnegie Science Center',
+    adress: '1 Allegheny Ave, Pittsburgh, PA 15212, USA',
+    category: 'Science Museum'
+  },
+  {
+    name: 'Steel City Con',
+    adress: '209 Mall Plaza Blvd, Monroeville, PA 15146, USA',
+    category: 'Comic Con'
+  },
+  {
+    name: 'Victory Pointe Arcade and Gaming Cafe',
+    adress: '1113 E Carson St, Pittsburgh, PA 15203, USA',
+    category: 'Cafè and Gambling Hall'
+  },
+];
+
+// This is the ViewModel of my project
+var myViewModel = function() {
+    var self = this;
+
+    // Create a Knockout observable Array for all the geeky places
+    this.geekPlaceList = ko.observableArray([]);
+
+    // Add each geeky place listed in the inital list to the observable Array
+    geekyPlaces.forEach(function(geekyPlace) {
+      self.geekPlaceList.push( new GeekPlace(geekyPlace));
+    });
+
+    // Set the current place to be the first item in the observable Array
+    this.currentPlace = ko.observable(this.geekPlaceList()[0]);
+
+};
+
+// This is the Model (data) of my project
+var GeekPlace = function(geekyPlace) {
+  this.name = ko.observable(geekyPlace.name);
+  this.address = ko.observable(geekyPlace.address);
+  this.category = ko.observable(geekyPlace.category);
+}
+
+// Apply the Bindings
+ko.applyBindings(new myViewModel());

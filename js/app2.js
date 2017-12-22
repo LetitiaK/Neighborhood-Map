@@ -7,6 +7,16 @@ var geekyPlaces = [
     category: 'Comic Book Shop'
   },
   {
+    name: 'New Dimension Comics',
+    address: '3075 Clairton Rd #940, West Mifflin, PA 15123, USA',
+    category: 'Comic Book Shop'
+  },
+  {
+    name: 'Geekadrome',
+    address: '534 Brookline Blvd, Pittsburgh, PA 15226, USA',
+    category: 'Comic Book Shop'
+  },
+  {
     name: 'Geek Dot Jewelry',
     address: '3453 Butler Street, Lawrenceville, PA 15201, USA',
     category: 'Jewelry Shop'
@@ -14,7 +24,7 @@ var geekyPlaces = [
   {
     name: 'Carnegie Science Center',
     address: '1 Allegheny Ave, Pittsburgh, PA 15212, USA',
-    category: 'Science Museum'
+    category: 'Museum'
   },
   {
     name: 'Steel City Con',
@@ -22,10 +32,25 @@ var geekyPlaces = [
     category: 'Comic Con'
   },
   {
+    name: '3 RIVERS COMICON',
+    address: '3075 Old Clairton Rd., West Mifflin, PA 15123, USA',
+    category: 'Comic Con'
+  },
+  {
     name: 'Victory Pointe Arcade and Gaming Cafe',
     address: '1113 E Carson St, Pittsburgh, PA 15203, USA',
     category: 'Cafè and Gambling Hall'
   },
+  {
+    name: 'Games N\' At',
+    address: '2010 Josephine St, Pittsburgh, PA 15203, USA',
+    category: 'Cafè and Gambling Hall'
+  },
+  {
+    name: 'Kickback Pinball Cafe',
+    address: '4326 Butler St, Pittsburgh, PA 15201, USA',
+    category: 'Cafè and Gambling Hall'
+  }
 ];
 
 // This is the ViewModel of my project
@@ -176,6 +201,17 @@ function initMap() {
        // Place the marker on the map and make sure the boundaries fit
        var bounds = new google.maps.LatLngBounds();
        for (var i = 0; i < markers.length; i++) {
+         if (markers[i].id.category == "Comic Book Shop") {
+           markers[i].setIcon(makeMarkerIcon('f9e425'));
+         } else if (markers[i].id.category == "Jewelry Shop") {
+          markers[i].setIcon(makeMarkerIcon('2b5dad'));
+         } else if (markers[i].id.category == "Museum") {
+          markers[i].setIcon(makeMarkerIcon('ad2b74'));
+         } else if (markers[i].id.category == "Comic Con") {
+          markers[i].setIcon(makeMarkerIcon('3b895e'));
+         } else if (markers[i].id.category == "Cafè and Gambling Hall") {
+          markers[i].setIcon(makeMarkerIcon('ba2121'));
+         }
          markers[i].setMap(map);
          bounds.extend(markers[i].position);
        }
@@ -183,10 +219,9 @@ function initMap() {
      });
 
    });
-
-   // Extend the boundaries of the map for each marker and display the marker
 }
 
+// Create the infowindow and add the name, category and address
 function populateInfoWindow(marker, infowindow, address, category) {
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
@@ -196,4 +231,18 @@ function populateInfoWindow(marker, infowindow, address, category) {
       infowindow.marker = null;
     });
   }
+}
+
+// This function takes in a COLOR, and then creates a new marker
+// icon of that color. The icon will be 21 px wide by 34 high, have an origin
+// of 0, 0 and be anchored at 10, 34).
+function makeMarkerIcon(markerColor) {
+  var markerImage = new google.maps.MarkerImage(
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(25, 46),
+    new google.maps.Point(0, 0),
+    new google.maps.Point(10, 34),
+    new google.maps.Size(25, 46));
+  return markerImage;
 }

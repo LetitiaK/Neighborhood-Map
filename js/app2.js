@@ -247,7 +247,7 @@ function populateInfoWindow(marker, infowindow, address, category) {
 }
 
 // This function takes in a COLOR, and then creates a new marker
-// icon of that color. The icon will be 21 px wide by 34 high, have an origin
+// icon of that color. The icon will be 25 px wide by 46 high, have an origin
 // of 0, 0 and be anchored at 10, 34).
 function makeMarkerIcon(markerColor) {
   var markerImage = new google.maps.MarkerImage(
@@ -258,4 +258,37 @@ function makeMarkerIcon(markerColor) {
     new google.maps.Point(10, 34),
     new google.maps.Size(25, 46));
   return markerImage;
+}
+
+document.getElementById('show-listings-cafe').addEventListener('click', function() {
+  showListings("Cafè and Gambling Hall");
+  }, false);
+document.getElementById('show-listings-comic-book').addEventListener('click', function() {
+  showListings("Comic Book Shop");
+  }, false);
+document.getElementById('show-listings-comic-con').addEventListener('click', function() {
+  showListings("Comic Con");
+  }, false);
+document.getElementById('show-listings-jewelry').addEventListener('click', function() {
+  showListings("Jewelry Shop");
+  }, false);
+document.getElementById('show-listings-science').addEventListener('click', function() {
+  showListings("Science Museum");
+  }, false);
+
+// This function will loop through the markers array and display either all
+// or only those that are from a certain category
+function showListings(category) {
+  var bounds = new google.maps.LatLngBounds();
+  // Extend the boundaries of the map for each marker and display the marker
+  for (var i = 0; i < markers.length; i++) {
+    console.log(markers[i].id.category);
+    if (markers[i].id.category == category) {
+      markers[i].setMap(map);
+      bounds.extend(markers[i].position);
+    } else {
+      markers[i].setMap(null);
+    }
+  }
+  map.fitBounds(bounds);
 }

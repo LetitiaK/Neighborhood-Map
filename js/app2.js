@@ -260,6 +260,7 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
+document.getElementById('show-listings-all').addEventListener('click', showAllListings);
 document.getElementById('show-listings-cafe').addEventListener('click', function() {
   showListings("Cafè and Gambling Hall");
   }, false);
@@ -276,19 +277,29 @@ document.getElementById('show-listings-science').addEventListener('click', funct
   showListings("Science Museum");
   }, false);
 
-// This function will loop through the markers array and display either all
-// or only those that are from a certain category
+// This function will loop through the markers array and display
+// only those that are from a certain category
 function showListings(category) {
   var bounds = new google.maps.LatLngBounds();
   // Extend the boundaries of the map for each marker and display the marker
   for (var i = 0; i < markers.length; i++) {
-    console.log(markers[i].id.category);
     if (markers[i].id.category == category) {
       markers[i].setMap(map);
       bounds.extend(markers[i].position);
     } else {
       markers[i].setMap(null);
     }
+  }
+  map.fitBounds(bounds);
+}
+
+// This function will loop through the markers array and display them all.
+function showAllListings() {
+  var bounds = new google.maps.LatLngBounds();
+  // Extend the boundaries of the map for each marker and display the marker
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+    bounds.extend(markers[i].position);
   }
   map.fitBounds(bounds);
 }

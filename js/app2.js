@@ -65,6 +65,19 @@ var myViewModel = function() {
       self.geekPlaceList.push( new GeekPlace(geekyPlace));
     });
 
+    // Sort the array of geeky Places alphabetically based on the name
+    function myCompareFunction(a,b){
+      if (a.name() < b.name()){
+        return -1;
+      } else if (a.name() > b.name()) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    this.geekPlaceList().sort(myCompareFunction);
+
     // Set the current place to be the first item in the observable Array
     this.currentPlace = ko.observable(this.geekPlaceList()[0]);
 

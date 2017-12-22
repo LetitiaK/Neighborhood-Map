@@ -25,13 +25,18 @@
       <div class="row">
         <div class="col-sm-12 options-box">
           <p class="information">Search for a Place:</p>
-          <div class="form-group">
-            <input type="text" class="form-control" id="usr">
+          <div class="form-inline">
+            <input type="text" class="form-control" data-bind="textInput: placeSearch">
+            <p class="information"> Search results for: <span class="information" data-bind="text: placeSearch"/></p>
+            <ul data-bind="foreach: visiblePlaces">
+              <li data-bind="text: name"></li>
+            </ul>
           </div>
-          <button type="button" class="btn show-listings" data-toggle="collapse" data-target="#list">
+          <br>
+          <button type="button" class="btn show-listings test" data-bind="click: closeList">
             Show all Places
           </button>
-          <ul id="list" class="listing collapse" data-bind="foreach: geekPlaceList">
+          <ul class="listing" data-bind="foreach: geekPlaceList, css: {open: showPlaceList}, css: {closed: showPlaceList}">
             <li data-bind="text: name, click: $parent.setSelectedPlace"></li>
           </ul>
           <br><br>

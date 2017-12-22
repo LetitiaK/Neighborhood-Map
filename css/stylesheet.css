@@ -66,11 +66,19 @@ html,
    cursor: pointer;
  }
 
+ .listing.open {
+   display: block;
+ }
+
+ .listing.closed {
+   display: none;
+ }
+
  .information {
    font-family: 'Raleway', sans-serif;
    color: #fff;
  }
 
  .form-control {
-   width: 80%;
+   width: 90%;
  }

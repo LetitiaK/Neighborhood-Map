@@ -62,12 +62,29 @@ var geekyPlaces = [
 var myViewModel = function() {
     var self = this;
 
+     // This knockout observable is used to toggle the list
+     this.showPlaceList = ko.observable(true);
+     // If the knockout observable is true, the list is shown
+     // else, the list is hidden
+     this.closeList = function() {
+       if (this.showPlaceList()) {
+         this.showPlaceList(false);
+       } else {
+         this.showPlaceList(true);
+       }
+     }
+
     // Create a Knockout observable Array for all the geeky places
     this.geekPlaceList = ko.observableArray([]);
 
     // Add each geeky place listed in the inital list to the observable Array
     geekyPlaces.forEach(function(geekyPlace) {
       self.geekPlaceList.push( new GeekPlace(geekyPlace));
+    });
+
+    this.placeSearch = ko.observable("");
+    this.visiblePlaces = ko.computed(function() {
+      console.log(this.placeSearch);
     });
 
     // Sort the array of geeky Places alphabetically based on the name

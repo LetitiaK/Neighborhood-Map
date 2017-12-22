@@ -36,8 +36,7 @@ html,
    font-family: 'Amatic SC', cursive;
  }
 
- #hide-listings,
- #show-listings {
+ .show-listings {
    width: 48%;
    background: #7dcdcd;
  }
@@ -64,9 +63,14 @@ html,
  .listing {
    font-family: 'Raleway', sans-serif;
    color: #fff;
+   cursor: pointer;
  }
 
  .information {
    font-family: 'Raleway', sans-serif;
    color: #fff;
+ }
+
+ .form-control {
+   width: 80%;
  }

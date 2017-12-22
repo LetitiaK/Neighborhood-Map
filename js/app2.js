@@ -7,11 +7,6 @@ var geekyPlaces = [
     category: 'Comic Book Shop'
   },
   {
-    name: 'New Dimension Comics',
-    address: '3075 Clairton Rd #940, West Mifflin, PA 15123, USA',
-    category: 'Comic Book Shop'
-  },
-  {
     name: 'Geekadrome',
     address: '534 Brookline Blvd, Pittsburgh, PA 15226, USA',
     category: 'Comic Book Shop'
@@ -22,9 +17,19 @@ var geekyPlaces = [
     category: 'Jewelry Shop'
   },
   {
+    name: 'Hot Haute Hot Inc',
+    address: '2124 Penn Ave, Pittsburgh, PA 15222, USA',
+    category: 'Jewelry Shop'
+  },
+  {
     name: 'Carnegie Science Center',
     address: '1 Allegheny Ave, Pittsburgh, PA 15212, USA',
-    category: 'Science Museum'
+    category: 'Museum'
+  },
+  {
+    name: 'ToonSeum',
+    address: '945 Liberty Ave, Pittsburgh, PA 15222, USA',
+    category: 'Museum'
   },
   {
     name: 'Steel City Con',
@@ -82,8 +87,16 @@ var myViewModel = function() {
     this.currentPlace = ko.observable(this.geekPlaceList()[0]);
 
     // Function to select a place from the list
+    // If the place is selected the infowindow is opened over the place
     this.setSelectedPlace = function () {
-      console.log("I am here");
+      name = this.name();
+      var result = markers.filter(function(marker) {
+        return marker.title == name;
+      });
+      var position = result[0].position;
+      var address = result[0].id.address;
+      var category = result[0].id.category;
+      createInfoWindowFromList(this, position, address, category);
     };
 
 };
@@ -209,6 +222,9 @@ function initMap() {
          marker.addListener('click', function() {
            populateInfoWindow(this, largeInfowindow, address, category);
          });
+       } else {
+         console.log("There was a problem");
+         console.log(status);
        }
 
        // Place the marker on the map and make sure the boundaries fit
@@ -218,8 +234,8 @@ function initMap() {
            markers[i].setIcon(makeMarkerIcon('f9e425'));
          } else if (markers[i].id.category == "Jewelry Shop") {
           markers[i].setIcon(makeMarkerIcon('2b5dad'));
-        } else if (markers[i].id.category == "Science Museum") {
-          markers[i].setIcon(makeMarkerIcon('ad2b74'));
+        } else if (markers[i].id.category == "Museum") {
+          markers[i].setIcon(makeMarkerIcon('f442e5'));
          } else if (markers[i].id.category == "Comic Con") {
           markers[i].setIcon(makeMarkerIcon('3b895e'));
          } else if (markers[i].id.category == "Cafè and Gambling Hall") {
@@ -234,6 +250,21 @@ function initMap() {
    });
 }
 
+// Function to open an infowindow by clicking on the entry in the list
+function createInfoWindowFromList(marker, position, address, category) {
+   var infowindow = new google.maps.InfoWindow();
+   if (infowindow.marker != marker) {
+     console.log(marker);
+     infowindow.marker = marker;
+     infowindow.setContent('<div><p>' + marker.name() + ' -- ' + category + '</p><p>' + address + '</p></div>');
+     infowindow.setPosition(position);
+     infowindow.open(map);
+     infowindow.addListener('closeclick', function() {
+     infowindow.marker = null;
+     });
+   }
+}
+
 // Create the infowindow and add the name, category and address
 function populateInfoWindow(marker, infowindow, address, category) {
   if (infowindow.marker != marker) {
@@ -241,7 +272,7 @@ function populateInfoWindow(marker, infowindow, address, category) {
     infowindow.setContent('<div><p>' + marker.title + ' -- ' + category + '</p><p>' + address + '</p></div>');
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function() {
-      infowindow.marker = null;
+    infowindow.marker = null;
     });
   }
 }
@@ -273,8 +304,8 @@ document.getElementById('show-listings-comic-con').addEventListener('click', fun
 document.getElementById('show-listings-jewelry').addEventListener('click', function() {
   showListings("Jewelry Shop");
   }, false);
-document.getElementById('show-listings-science').addEventListener('click', function() {
-  showListings("Science Museum");
+document.getElementById('show-listings-museum').addEventListener('click', function() {
+  showListings("Museum");
   }, false);
 
 // This function will loop through the markers array and display

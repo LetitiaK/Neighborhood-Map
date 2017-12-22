@@ -24,18 +24,24 @@
       </div>
       <div class="row">
         <div class="col-sm-12 options-box">
-          <p class="information">All Listings:</p>
-          <ul class="listing" data-bind="foreach: geekPlaceList">
+          <p class="information">Search for a Place:</p>
+          <div class="form-group">
+            <input type="text" class="form-control" id="usr">
+          </div>
+          <button type="button" class="btn show-listings" data-toggle="collapse" data-target="#list">
+            Show all Places
+          </button>
+          <ul id="list" class="listing collapse" data-bind="foreach: geekPlaceList">
             <li data-bind="text: name, click: $parent.setSelectedPlace"></li>
           </ul>
-          <p class="information">Search for Listing:</p>
+          <br><br>
           <p class="information">Filter by Category:</p>
-          <input id="show-listings-all" class="btn" type="button" value="All Categories">
-          <input id="show-listings-cafe" class="btn" type="button" value="Cafè & Gambling Hall">
-          <input id="show-listings-comic-book" class="btn" type="button" value="Comic Book Shop">
-          <input id="show-listings-comic-con" class="btn" type="button" value="Comic Con">
-          <input id="show-listings-jewelry" class="btn" type="button" value="Jewelry Shop">
-          <input id="show-listings-science" class="btn" type="button" value="Science Museum">
+          <input id="show-listings-all" class="btn show-listings" type="button" value="All Categories">
+          <input id="show-listings-cafe" class="btn show-listings" type="button" value="Cafè & Gambling Hall">
+          <input id="show-listings-comic-book" class="btn show-listings" type="button" value="Comic Book Shop">
+          <input id="show-listings-comic-con" class="btn show-listings" type="button" value="Comic Con">
+          <input id="show-listings-jewelry" class="btn show-listings" type="button" value="Jewelry Shop">
+          <input id="show-listings-museum" class="btn show-listings" type="button" value="Museum">
         </div>
       </div>
       <div class="row">

@@ -24,7 +24,7 @@ var geekyPlaces = [
   {
     name: 'Carnegie Science Center',
     address: '1 Allegheny Ave, Pittsburgh, PA 15212, USA',
-    category: 'Museum'
+    category: 'Science Museum'
   },
   {
     name: 'Steel City Con',
@@ -218,7 +218,7 @@ function initMap() {
            markers[i].setIcon(makeMarkerIcon('f9e425'));
          } else if (markers[i].id.category == "Jewelry Shop") {
           markers[i].setIcon(makeMarkerIcon('2b5dad'));
-         } else if (markers[i].id.category == "Museum") {
+        } else if (markers[i].id.category == "Science Museum") {
           markers[i].setIcon(makeMarkerIcon('ad2b74'));
          } else if (markers[i].id.category == "Comic Con") {
           markers[i].setIcon(makeMarkerIcon('3b895e'));

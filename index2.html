@@ -24,9 +24,18 @@
       </div>
       <div class="row">
         <div class="col-sm-12 options-box">
+          <p class="information">All Listings:</p>
           <ul class="listing" data-bind="foreach: geekPlaceList">
             <li data-bind="text: name, click: $parent.setSelectedPlace"></li>
           </ul>
+          <p class="information">Search for Listing:</p>
+          <p class="information">Filter by Category:</p>
+          <input id="hide-listings" class="btn" type="button" value="All Categories">
+          <input id="hide-listings" class="btn" type="button" value="Cafè & Gambling Hall">
+          <input id="show-listings" class="btn" type="button" value="Comic Book Shop">
+          <input id="hide-listings" class="btn" type="button" value="Comic Con">
+          <input id="hide-listings" class="btn" type="button" value="Jewelry Shop">
+          <input id="hide-listings" class="btn" type="button" value="Science Museum">
         </div>
       </div>
       <div class="row">

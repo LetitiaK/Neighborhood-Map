@@ -43,16 +43,16 @@ html,
 
  #map {
    bottom:0px;
-   height: 850px;
+   min-height: 850px;
    left: 362px;
    position: absolute;
    right: 0px;
-  border-radius: 10px;
+   border-radius: 10px;
  }
 
  .options-box {
    background: #000;
-   height: 850px;
+   min-height: 850px;
    line-height: 35px;
    padding: 10px 10px 30px 10px;
    text-align: left;

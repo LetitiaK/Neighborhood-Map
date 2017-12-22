@@ -26,9 +26,10 @@
         <div class="col-sm-12 options-box">
           <p class="information">Search for a Place:</p>
           <div class="form-inline">
-            <input type="text" class="form-control" data-bind="textInput: placeSearch">
+            <input type="search" class="form-control" data-bind="textInput: placeSearch, valueUpdate: 'keyup'">
             <p class="information"> Search results for: <span class="information" data-bind="text: placeSearch"/></p>
-            <ul data-bind="foreach: visiblePlaces">
+            <p class="information"></p>
+            <ul data-bind="foreach: filterPlaces">
               <li data-bind="text: name"></li>
             </ul>
           </div>

@@ -82,11 +82,6 @@ var myViewModel = function() {
       self.geekPlaceList.push( new GeekPlace(geekyPlace));
     });
 
-    this.placeSearch = ko.observable("");
-    this.visiblePlaces = ko.computed(function() {
-      console.log(this.placeSearch);
-    });
-
     // Sort the array of geeky Places alphabetically based on the name
     function myCompareFunction(a,b){
       if (a.name() < b.name()){
@@ -116,6 +111,7 @@ var myViewModel = function() {
       createInfoWindowFromList(this, position, address, category);
     };
 
+    this.placeSearch = ko.observable("");
 };
 
 // This is the Model (data) of my project
@@ -123,10 +119,31 @@ var GeekPlace = function(geekyPlace) {
   this.name = ko.observable(geekyPlace.name);
   this.address = ko.observable(geekyPlace.address);
   this.category = ko.observable(geekyPlace.category);
+  this.visible = ko.observable(true);
 }
 
+var vm = new myViewModel();
+
+
+myViewModel.prototype.filterPlaces = ko.computed(function () {
+    var self = this;
+    var filter = self.placeSearch().toLowerCase();
+    if (filter) {
+      return ko.utils.arrayFilter(self.geekPlaceList(), function(geekyPlace) {
+        var string = geekyPlace.name().toLowerCase();
+        var result = (string.search(filter) >= 0);
+        geekyPlace.visible(result);
+        if (result) {
+          // Add each geeky place listed in the inital list to the observable Array
+          console.log(result);
+        }
+        return result;
+      });
+    }
+}, vm);
+
 // Apply the Bindings
-ko.applyBindings(new myViewModel());
+ko.applyBindings(vm);
 
 // Create the Google Map and centralize it over Pittsburgh, PA
 var map;

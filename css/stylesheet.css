@@ -7,15 +7,11 @@ html,
  }
 
  .menu {
-   width: 60px;
-   height: 60px;
+   width: 40px;
+   height: 40px;
    padding: 0;
    margin-left: 0;
- }
-
- #upper {
-   width: 340px;
-   background: #000;
+   margin-top: -15px;
  }
 
  .container {
@@ -43,21 +39,42 @@ html,
 
  #map {
    bottom:0px;
-   min-height: 850px;
+   min-height: 848px;
    left: 362px;
    position: absolute;
    right: 0px;
    border-radius: 10px;
+   margin-bottom: 2px;
  }
 
  .options-box {
    background: #000;
-   min-height: 850px;
+   min-height: 810px;
    line-height: 35px;
    padding: 10px 10px 30px 10px;
    text-align: left;
    width: 340px;
-   border-radius: 10px;
+   border-bottom-left-radius: 10px;
+   border-bottom-right-radius: 10px;
+ }
+
+ .options-box-small {
+   background: #000;
+   height: 10px;
+   line-height: 35px;
+   padding: 10px 10px 30px 10px;
+   text-align: left;
+   width: 340px;
+   border-top-left-radius: 10px;
+   border-top-right-radius: 10px;
+ }
+
+ .options-box.open {
+   display: block;
+ }
+
+ .options-box.closed {
+   display: none;
  }
 
  .listing {

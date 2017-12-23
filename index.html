@@ -23,7 +23,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12 options-box">
+        <div class="col-sm-12 options-box-small">
+            <img class="menu" src="img/menu2.png" data-bind="click: closeMenu">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 options-box" data-bind="css: {open: showSideMenu}, css: {closed: showSideMenu}">
           <p class="information">Search for a Place:</p>
           <div class="form-inline">
             <input type="search" class="form-control" data-bind="textInput: placeSearch, valueUpdate: 'keyup'">

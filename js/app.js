@@ -1,3 +1,6 @@
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
 // This list contains the 5 places wich I initially chose to be displayed
 // on the map
 var geekyPlaces = [
@@ -58,15 +61,29 @@ var geekyPlaces = [
   }
 ];
 
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
 // This is the ViewModel of my project
 var myViewModel = function() {
     var self = this;
+
+    this.showSideMenu = ko.observable(true);
+
+    this.closeMenu = function() {
+      if (this.showSideMenu()) {
+        this.showSideMenu(false);
+      } else {
+        this.showSideMenu(true);
+      }
+    }
 
      // This knockout observable is used to toggle the list
      this.showPlaceList = ko.observable(true);
      // If the knockout observable is true, the list is shown
      // else, the list is hidden
      this.closeList = function() {
+       showAllListings();
        if (this.showPlaceList()) {
          this.showPlaceList(false);
        } else {
@@ -105,16 +122,18 @@ var myViewModel = function() {
       var result = markers.filter(function(marker) {
         return marker.title == name;
       });
-      console.log(name);
       var position = result[0].position;
       var address = result[0].id.address;
       var category = result[0].id.category;
-      showPlace(name);
+      showListings(name, "name");
       createInfoWindowFromList(this, position, address, category);
     };
 
     this.placeSearch = ko.observable("");
 };
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 // This is the Model (data) of my project
 var GeekPlace = function(geekyPlace) {
@@ -124,8 +143,10 @@ var GeekPlace = function(geekyPlace) {
   this.visible = ko.observable(true);
 }
 
-var vm = new myViewModel();
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
+var vm = new myViewModel();
 
 myViewModel.prototype.filterPlaces = ko.computed(function () {
     var self = this;
@@ -142,6 +163,9 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
 
 // Apply the Bindings
 ko.applyBindings(vm);
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 // Create the Google Map and centralize it over Pittsburgh, PA
 var map;
@@ -251,6 +275,7 @@ function initMap() {
          });
 
          markers.push(marker);
+
          marker.addListener('click', function() {
            populateInfoWindow(this, largeInfowindow, address, category);
          });
@@ -282,9 +307,19 @@ function initMap() {
    });
 }
 
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+var infowindow = null;
 // Function to open an infowindow by clicking on the entry in the list
 function createInfoWindowFromList(marker, position, address, category) {
-   var infowindow = new google.maps.InfoWindow();
+  // If there is already an infowindow open from another location
+  // it is closed automatically, so that there is always only one
+  // InfoWindow open
+   if (infowindow) {
+     infowindow.close();
+   }
+   infowindow = new google.maps.InfoWindow();
    if (infowindow.marker != marker) {
      infowindow.marker = marker;
      infowindow.setContent('<div><p>' + marker.name() + ' -- ' + category + '</p><p>' + address + '</p></div>');
@@ -295,6 +330,9 @@ function createInfoWindowFromList(marker, position, address, category) {
      });
    }
 }
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 // Create the infowindow and add the name, category and address
 function populateInfoWindow(marker, infowindow, address, category) {
@@ -307,6 +345,9 @@ function populateInfoWindow(marker, infowindow, address, category) {
     });
   }
 }
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 // This function takes in a COLOR, and then creates a new marker
 // icon of that color. The icon will be 25 px wide by 46 high, have an origin
@@ -324,28 +365,38 @@ function makeMarkerIcon(markerColor) {
 
 document.getElementById('show-listings-all').addEventListener('click', showAllListings);
 document.getElementById('show-listings-cafe').addEventListener('click', function() {
-  showListings("Cafè and Gambling Hall");
+  showListings("Cafè and Gambling Hall", "category");
   }, false);
 document.getElementById('show-listings-comic-book').addEventListener('click', function() {
-  showListings("Comic Book Shop");
+  showListings("Comic Book Shop", "category");
   }, false);
 document.getElementById('show-listings-comic-con').addEventListener('click', function() {
-  showListings("Comic Con");
+  showListings("Comic Con", "category");
   }, false);
 document.getElementById('show-listings-jewelry').addEventListener('click', function() {
-  showListings("Jewelry Shop");
+  showListings("Jewelry Shop", "category");
   }, false);
 document.getElementById('show-listings-museum').addEventListener('click', function() {
-  showListings("Museum");
+  showListings("Museum", "category");
   }, false);
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 // This function will loop through the markers array and display
 // only those that are from a certain category
-function showListings(category) {
+function showListings(data, type) {
   var bounds = new google.maps.LatLngBounds();
   // Extend the boundaries of the map for each marker and display the marker
   for (var i = 0; i < markers.length; i++) {
-    if (markers[i].id.category == category) {
+    switch (type) {
+      case "category":
+        markerCheck = markers[i].id.category;
+        break;
+      case "name":
+        markerCheck = markers[i].id.name;
+    }
+    if (markerCheck == data) {
       markers[i].setMap(map);
       bounds.extend(markers[i].position);
     } else {
@@ -355,21 +406,9 @@ function showListings(category) {
   map.fitBounds(bounds);
 }
 
-// This function will loop through the markers array and display
-// only the one that was selected from the list
-function showPlace(name) {
-  var bounds = new google.maps.LatLngBounds();
-  // Extend the boundaries of the map for each marker and display the marker
-  for (var i = 0; i < markers.length; i++) {
-    if (markers[i].id.name == name) {
-      markers[i].setMap(map);
-      bounds.extend(markers[i].position);
-    } else {
-      markers[i].setMap(null);
-    }
-  }
-  map.fitBounds(bounds);
-}
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 // This function will loop through the markers array and display them all.
 function showAllListings() {

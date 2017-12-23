@@ -35,16 +35,37 @@ html,
  .show-listings {
    width: 48%;
    background: #7dcdcd;
+   margin-top: 10px;
  }
 
  #map {
-   bottom:0px;
+   bottom: 0;
    min-height: 848px;
    left: 362px;
    position: absolute;
    right: 0px;
    border-radius: 10px;
    margin-bottom: 2px;
+ }
+
+ #map.true {
+   bottom: 0px;
+   min-height: 848px;
+   left: 362px;
+   position: absolute;
+   right: 0px;
+   border-radius: 10px;
+ }
+
+ #map.false {
+   min-height: 800px;
+   border-radius: 10px;
+   margin-bottom: -810px;
+   margin-left: -360px;
+ }
+
+ .map-view.closed {
+   margin-top: -50px;
  }
 
  .options-box {
@@ -80,7 +101,12 @@ html,
  .listing {
    font-family: 'Raleway', sans-serif;
    color: #fff;
+   font-size: 14px;
    cursor: pointer;
+ }
+
+ .list-element {
+   margin-bottom: -15px;
  }
 
  .listing.open {
@@ -94,8 +120,10 @@ html,
  .information {
    font-family: 'Raleway', sans-serif;
    color: #fff;
+   margin-bottom: -10px;
  }
 
  .form-control {
    width: 90%;
+   margin-top: 10px;
  }

@@ -68,9 +68,10 @@ var geekyPlaces = [
 var myViewModel = function() {
     var self = this;
 
-    this.showSideMenu = ko.observable(true);
+    this.showSideMenu = ko.observable(false);
 
     this.closeMenu = function() {
+      
       if (this.showSideMenu()) {
         this.showSideMenu(false);
       } else {
@@ -79,7 +80,7 @@ var myViewModel = function() {
     }
 
      // This knockout observable is used to toggle the list
-     this.showPlaceList = ko.observable(true);
+     this.showPlaceList = ko.observable(false);
      // If the knockout observable is true, the list is shown
      // else, the list is hidden
      this.closeList = function() {

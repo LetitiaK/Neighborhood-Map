@@ -23,29 +23,29 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12 options-box-small">
+        <div class="col-sm-3 options-box-small">
             <img class="menu" src="img/menu2.png" data-bind="click: closeMenu">
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12 options-box" data-bind="css: {open: showSideMenu}, css: {closed: showSideMenu}">
+        <div class="col-sm-3 options-box" data-bind="css: {open: showSideMenu}, css: {closed: showSideMenu}">
           <p class="information">Search for a Place:</p>
           <div class="form-inline">
             <input type="search" class="form-control" data-bind="textInput: placeSearch, valueUpdate: 'keyup'">
             <p class="information"> Search results for: <span class="information" data-bind="text: placeSearch"/></p>
             <p class="information"></p>
             <ul class="listing" data-bind="foreach: filterPlaces">
-              <li data-bind="text: name, click: $parent.setSelectedPlace"></li>
+              <li class="list-element" data-bind="text: name, click: $parent.setSelectedPlace"></li>
             </ul>
           </div>
-          <br>
-          <button type="button" class="btn show-listings test" data-bind="click: closeList">
+
+          <button type="button" class="btn show-listings" data-bind="click: closeList">
             Show all Places
           </button>
           <ul class="listing" data-bind="foreach: geekPlaceList, css: {open: showPlaceList}, css: {closed: showPlaceList}">
-            <li data-bind="text: name, click: $parent.setSelectedPlace"></li>
+            <li class="list-element" data-bind="text: name, click: $parent.setSelectedPlace"></li>
           </ul>
-          <br><br>
+
           <p class="information">Filter by Category:</p>
           <input id="show-listings-all" class="btn show-listings" type="button" value="All Categories">
           <input id="show-listings-cafe" class="btn show-listings" type="button" value="Cafè & Gambling Hall">
@@ -57,7 +57,7 @@
       </div>
       <div class="row">
         <div class="col-sm-12">
-          <div id="map"></div>
+          <div class="map-view" id="map" data-bind="css: {true: showSideMenu}, css: {false: showSideMenu}"></div>
         </div>
       </div>
     </div>

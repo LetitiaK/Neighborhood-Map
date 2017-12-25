@@ -68,10 +68,11 @@ var geekyPlaces = [
 var myViewModel = function() {
     var self = this;
 
+    // 
     this.showSideMenu = ko.observable(false);
 
     this.closeMenu = function() {
-      
+
       if (this.showSideMenu()) {
         this.showSideMenu(false);
       } else {
@@ -84,7 +85,7 @@ var myViewModel = function() {
      // If the knockout observable is true, the list is shown
      // else, the list is hidden
      this.closeList = function() {
-       showAllListings();
+       showAllListings(markers);
        if (this.showPlaceList()) {
          this.showPlaceList(false);
        } else {
@@ -149,7 +150,11 @@ var GeekPlace = function(geekyPlace) {
 
 var vm = new myViewModel();
 
+// Compute the places which fit to the given filter, i.e.
+// the user input in the search bar
 myViewModel.prototype.filterPlaces = ko.computed(function () {
+    var filteredPlaces = ko.observableArray([]);
+    var filteredMarkers = ko.observableArray([]);
     var self = this;
     var filter = self.placeSearch().toLowerCase();
     if (filter) {
@@ -157,6 +162,19 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
         var string = geekyPlace.name().toLowerCase();
         var result = (string.search(filter) >= 0);
         geekyPlace.visible(result);
+        if (result) {
+          filteredPlaces.push(geekyPlace);
+        }
+        for (var i = 0; i < filteredPlaces().length; i++) {
+          for (var j = 0; j < markers.length; j++) {
+            if (filteredPlaces()[i].name() == markers[j].title) {
+              if (filteredMarkers.indexOf(markers[j]) < 0) {
+                filteredMarkers.push(markers[j]);
+              }
+            }
+          }
+          showAllListings(filteredMarkers);
+        }
         return result;
       });
     }
@@ -364,7 +382,9 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
-document.getElementById('show-listings-all').addEventListener('click', showAllListings);
+document.getElementById('show-listings-all').addEventListener('click', function() {
+  showAllListings(markers);
+}, false);
 document.getElementById('show-listings-cafe').addEventListener('click', function() {
   showListings("Cafè and Gambling Hall", "category");
   }, false);
@@ -412,12 +432,18 @@ function showListings(data, type) {
 ///////////////////////////////////////////////////////////////////////////
 
 // This function will loop through the markers array and display them all.
-function showAllListings() {
+function showAllListings(array) {
   var bounds = new google.maps.LatLngBounds();
-  // Extend the boundaries of the map for each marker and display the marker
+  if (ko.isObservable(array)) {
+    array = array();
+  }
   for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-    bounds.extend(markers[i].position);
+    markers[i].setMap(null);
+  }
+  //Extend the boundaries of the map for each marker and display the marker
+  for (var i = 0; i < array.length; i++) {
+    array[i].setMap(map);
+    bounds.extend(array[i].position);
   }
   map.fitBounds(bounds);
 }

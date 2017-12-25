@@ -68,19 +68,20 @@ var geekyPlaces = [
 var myViewModel = function() {
     var self = this;
 
-    // 
+    // Determine whether the side menu ought to be shown or not
+    // This is important for usability on smaller devices
     this.showSideMenu = ko.observable(false);
-
     this.closeMenu = function() {
-
       if (this.showSideMenu()) {
         this.showSideMenu(false);
       } else {
         this.showSideMenu(true);
+        // Resize the map in order to prevent grey side bar
+        google.maps.event.trigger(map, 'resize');
       }
     }
 
-     // This knockout observable is used to toggle the list
+     // This knockout observable is used to toggle the list of all places
      this.showPlaceList = ko.observable(false);
      // If the knockout observable is true, the list is shown
      // else, the list is hidden
@@ -111,7 +112,6 @@ var myViewModel = function() {
         return 0;
       }
     }
-
     this.geekPlaceList().sort(myCompareFunction);
 
     // Set the current place to be the first item in the observable Array
@@ -162,9 +162,12 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
         var string = geekyPlace.name().toLowerCase();
         var result = (string.search(filter) >= 0);
         geekyPlace.visible(result);
+        // If the result is true push this place to the filteredPlaces array
         if (result) {
           filteredPlaces.push(geekyPlace);
         }
+        // Push those markers to the filteredMarkers array that have a result
+        // of true, i.e. that include the given filter
         for (var i = 0; i < filteredPlaces().length; i++) {
           for (var j = 0; j < markers.length; j++) {
             if (filteredPlaces()[i].name() == markers[j].title) {
@@ -173,6 +176,8 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
               }
             }
           }
+          // Call the function showAllListings to show only those markers
+          // for which the filter is true
           showAllListings(filteredMarkers);
         }
         return result;
@@ -301,9 +306,12 @@ function initMap() {
        } else {
          console.log("There was a problem");
          console.log(status);
+         alert("Not all markers could be loaded correctly. \
+         Perhabs you have reached the limit of possible markers per day.")
        }
 
        // Place the markers on the map and make sure the boundaries fit
+       // Determine the color of the marker based on the category
        var bounds = new google.maps.LatLngBounds();
        for (var i = 0; i < markers.length; i++) {
          if (markers[i].id.category == "Comic Book Shop") {
@@ -434,13 +442,15 @@ function showListings(data, type) {
 // This function will loop through the markers array and display them all.
 function showAllListings(array) {
   var bounds = new google.maps.LatLngBounds();
+  // Check if the array is a knockout observable or a normal array
   if (ko.isObservable(array)) {
     array = array();
   }
+  // Delete all markers from the map
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
-  //Extend the boundaries of the map for each marker and display the marker
+  //Extend the boundaries of the map for each marker and display the markers
   for (var i = 0; i < array.length; i++) {
     array[i].setMap(map);
     bounds.extend(array[i].position);

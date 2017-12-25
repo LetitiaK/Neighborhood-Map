@@ -123,6 +123,11 @@ html,
    margin-bottom: -10px;
  }
 
+ .result-information {
+   font-family: 'Raleway', sans-serif;
+   text-align: center;
+ }
+
  .form-control {
    width: 90%;
    margin-top: 10px;

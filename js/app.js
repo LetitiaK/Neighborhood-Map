@@ -20,7 +20,7 @@ var geekyPlaces = [
     category: 'Jewelry Shop'
   },
   {
-    name: 'Hot Haute Hot Inc',
+    name: 'Hot Haute Hot',
     address: '2124 Penn Ave, Pittsburgh, PA 15222, USA',
     category: 'Jewelry Shop'
   },
@@ -129,9 +129,12 @@ var myViewModel = function() {
       var category = result[0].id.category;
       showListings(name, "name");
       createInfoWindowFromList(this, position, address, category);
+      console.log(this.name());
+      createTwitterFeed(this.name());
     };
 
     this.placeSearch = ko.observable("");
+
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -302,6 +305,7 @@ function initMap() {
 
          marker.addListener('click', function() {
            populateInfoWindow(this, largeInfowindow, address, category);
+           createTwitterFeed();
          });
        } else {
          console.log("There was a problem");
@@ -456,4 +460,33 @@ function showAllListings(array) {
     bounds.extend(array[i].position);
   }
   map.fitBounds(bounds);
+}
+
+function createTwitterFeed(place) {
+  if (place == "Carnegie Science Center") {
+    place = "CarnegieSciCtr"
+  } else if (place == "Geek Dot Jewelry"){
+    place = "pmichaeldesign"
+  } else if (place == "Victory Pointe Arcade and Gaming Cafe") {
+    place ="VictoryPoint"
+  } else {
+    place = place.replace(/\s+/g, '');
+  }
+  var url = "https://publish.twitter.com/oembed?url=https://twitter.com/" + place;
+  url += '&callback=?';
+
+  $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: "jsonp",
+        timeout: 8000,
+      }).done(function(result) {
+        console.log(result.html);
+        result_html = "<br><h1>Twitter Results</h1>" + result.html
+        $('#twitter').html(result_html);
+      }).fail(function(result) {
+        result_html = "<br><h1>Twitter Results</h1><h3 class='result-information'>Sorry, this place is not on Twitter!</h3>" 
+        $('#twitter').html(result_html);
+        console.log("error");
+      });
 }

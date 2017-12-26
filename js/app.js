@@ -499,7 +499,10 @@ function createTwitterFeed(place) {
         result_html = "<br><h1>Twitter Results</h1>" + result.html
         $('#twitter').html(result_html);
       }).fail(function(result) {
-        result_html = "<br><h1>Twitter Results</h1><h3 class='result-information'>Sorry, this place is not on Twitter!</h3>"
+        result_html = "<br><h1>Twitter Results</h1>\
+                      <h3 class='result-information'>\
+                      Sorry, this place is either not on Twitter\
+                      or an error occured during API loading!</h3>"
         $('#twitter').html(result_html);
       });
 }
@@ -590,9 +593,7 @@ function getFoursquareDetails(id) {
         var photoSize = "600x400";
         var photoSuffix = result.response.venue.bestPhoto.suffix;
         var photo = String(photoPrefix) + photoSize + String(photoSuffix);
-        console.log(photo);
 
-      console.log(result.response.venue.bestPhoto);
         result_html = "<br><h1>Foursquare Results</h1>" +
                       "<h4 class='result-information'><strong>Rating: </strong>" +
                       result.response.venue.rating + "<br><br><div class='result-information'>\

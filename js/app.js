@@ -111,30 +111,32 @@ var myViewModel = function () {
       var category = result[0].id.category;
       // The inforwindow is shown, as well as the Twitter feed
       // and the Foursquare information
+      // To better show which place is selected only this marker is
+      // visible and it is zoomed in
       showListings(name, "name");
-
       createInfoWindowFromList(this, position, address, category);
       createTwitterFeed(this.name());
       getFoursquare(position, this.name());
     };
 
+    // The placeSearch variable is used for filtering the places
     this.placeSearch = ko.observable("");
-
 };
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// Model
+// #########################################################################
 
-// This is the Model (data) of my project
 var GeekPlace = function (geekyPlace) {
   this.name = ko.observable(geekyPlace.name);
   this.address = ko.observable(geekyPlace.address);
   this.category = ko.observable(geekyPlace.category);
   this.visible = ko.observable(true);
-}
+};
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// Live Search
+// #########################################################################
 
 var vm = new myViewModel();
 
@@ -176,8 +178,9 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
 // Apply the Bindings
 ko.applyBindings(vm);
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// Google Map
+// #########################################################################
 
 // Create the Google Map and centralize it over Pittsburgh, PA
 var map;
@@ -185,79 +188,33 @@ var geocoder;
 var markers = [];
 
 function initMap () {
-    var styles =
-    [
-      {
-          "featureType": "landscape.natural",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "visibility": "on"
-              },
-              {
-                  "color": "#e0efef"
-              }
-          ]
-      },
-      {
-          "featureType": "poi",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "visibility": "on"
-              },
-              {
-                  "hue": "#1900ff"
-              },
-              {
-                  "color": "#c0e8e8"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
+    // Apply the following styling to the map
+    var styles = [
+      { "featureType": "landscape.natural",
+        "elementType": "geometry.fill",
+        "stylers": [ { "visibility": "on" },
+                     { "color": "#e0efef"} ] },
+      { "featureType": "poi",
+        "elementType": "geometry.fill",
+        "stylers": [ { "visibility": "on" },
+                     { "hue": "#1900ff" },
+                     { "color": "#c0e8e8" } ] },
+      { "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [ { "lightness": 100 },
+                     { "visibility": "simplified" } ] },
+      { "featureType": "road",
+        "elementType": "labels",
+        "stylers": [ { "visibility": "off" } ] },
+      { "featureType": "transit.line",
           "elementType": "geometry",
-          "stylers": [
-              {
-                  "lightness": 100
-              },
-              {
-                  "visibility": "simplified"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "labels",
-          "stylers": [
-              {
-                  "visibility": "off"
-              }
-          ]
-      },
-      {
-          "featureType": "transit.line",
-          "elementType": "geometry",
-          "stylers": [
-              {
-                  "visibility": "on"
-              },
-              {
-                  "lightness": 700
-              }
-          ]
-      },
-      {
-          "featureType": "water",
+          "stylers": [ { "visibility": "on" },
+                       { "lightness": 700 } ] },
+      { "featureType": "water",
           "elementType": "all",
-          "stylers": [
-              {
-                  "color": "#7dcdcd"
-              }
-          ]
-      }
-  ]
-  console.log("Create Initial Map");
+          "stylers": [ { "color": "#7dcdcd" } ] }
+  ];
+
    map = new google.maps.Map(document.getElementById('map'), {
      center: {lat: 40.440625, lng: -79.995886},
      styles: styles,
@@ -288,10 +245,16 @@ function initMap () {
 
          markers.push(marker);
 
+         // Set all animations to null
+         // Then add an animation (bounce) to the selected marker
          marker.addListener('click', function () {
            for (var i = 0; i < markers.length; i++) {
               markers[i].setAnimation(null);
            }
+           // Show an infowindow, the twitter feed and the foursquare
+           // information. To better visualize which marker is selected
+           // the selected marker will bounce until the infowindow is closed
+           // or another marker is selected
            marker.setAnimation(google.maps.Animation.BOUNCE);
            populateInfoWindow(this, largeInfowindow, address, category);
            createTwitterFeed(this.title);
@@ -328,8 +291,9 @@ function initMap () {
    });
 }
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// InfoWindow - List Selection
+// #########################################################################
 
 var infowindow = null;
 // Function to open an infowindow by clicking on the entry in the list
@@ -345,7 +309,9 @@ function createInfoWindowFromList (marker, position, address, category) {
    if (infowindow.marker != marker) {
      infowindow.marker = marker;
      infowindow.setContent('<div><p>' + marker.name() + ' -- ' + category +
-                           '</p><p>' + address + '<br><br>' + img + '</p><p>Scroll down for more information!</p></div>');
+                           '</p><p>' + address + '<br><br>' + img +
+                           '</p><p>Scroll down for more information!</p></div>');
+     // Determine the position of the infowindow by the place position
      infowindow.setPosition(position);
      infowindow.open(map);
      infowindow.addListener('closeclick', function () {
@@ -355,8 +321,9 @@ function createInfoWindowFromList (marker, position, address, category) {
    }
 }
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// InfoWindow - Map Selection
+// #########################################################################
 
 // Create the infowindow and add the name, category and address
 function populateInfoWindow(marker, infowindow, address, category) {
@@ -364,7 +331,8 @@ function populateInfoWindow(marker, infowindow, address, category) {
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
     infowindow.setContent('<div><p>' + marker.title + ' -- ' + category +
-                          '</p><p>' + address + '<br><br>' + img + '</p><p>Scroll down for more information!</p></div>');
+                          '</p><p>' + address + '<br><br>' + img +
+                          '</p><p>Scroll down for more information!</p></div>');
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function () {
       marker.setAnimation(null);
@@ -373,13 +341,19 @@ function populateInfoWindow(marker, infowindow, address, category) {
   }
 }
 
+// #########################################################################
+// Google StreetView Image
+// #########################################################################
+
 function getGoogleStreetView(address) {
-  var $url = 'http://maps.googleapis.com/maps/api/streetview?size=250x150&location='+ address;
+  var $url = 'http://maps.googleapis.com/maps/api/streetview?size=250x150&location=' + address;
   var img = ["<img src=' " + $url + " '>"];
   return img;
 }
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+
+// #########################################################################
+// Marker Icon
+// #########################################################################
 
 // This function takes in a COLOR, and then creates a new marker
 // icon of that color. The icon will be 25 px wide by 46 high, have an origin
@@ -395,6 +369,9 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
+// The user can select to show only certain categories by clicking on the
+// respective buttons in the side bar
+// Then, only the markers of this category are shown
 document.getElementById('show-listings-all').addEventListener('click', function () {
   showAllListings(markers);
 }, false);
@@ -414,8 +391,10 @@ document.getElementById('show-listings-museum').addEventListener('click', functi
   showListings("Museum", "category");
   }, false);
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+
+// #########################################################################
+// showListings - Show selected listings from a certain category
+// #########################################################################
 
 // This function will loop through the markers array and display
 // only those that are from a certain category
@@ -440,9 +419,9 @@ function showListings(data, type) {
   map.fitBounds(bounds);
 }
 
-
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// showAllListings - show all markers of all categories
+// #########################################################################
 
 // This function will loop through the markers array and display them all.
 function showAllListings(array) {
@@ -456,73 +435,91 @@ function showAllListings(array) {
     markers[i].setMap(null);
   }
   //Extend the boundaries of the map for each marker and display the markers
-  for (var i = 0; i < array.length; i++) {
-    array[i].setMap(map);
-    bounds.extend(array[i].position);
+  for (var j = 0; j < array.length; j++) {
+    array[j].setMap(map);
+    bounds.extend(array[j].position);
   }
   map.fitBounds(bounds);
 }
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// Twitter Feed - Include a Twitter widget of the place's twitter account
+// #########################################################################
 
 // This function creates a Twitter feed for the respective place
 // below the map
 function createTwitterFeed(place) {
+  // For certain places the twitter name is not equal to their
+  // real name, so the name has to be adjusted
   if (place == "Carnegie Science Center") {
-    place = "CarnegieSciCtr"
+    place = "CarnegieSciCtr";
   } else if (place == "Geek Dot Jewelry"){
-    place = "pmichaeldesign"
+    place = "pmichaeldesign";
   } else if (place == "Victory Pointe Arcade and Gaming Cafe") {
-    place ="VictoryPoint"
+    place ="VictoryPoint";
   } else {
     place = place.replace(/\s+/g, '');
   }
   var url = "https://publish.twitter.com/oembed?url=https://twitter.com/" + place;
   url += '&callback=?';
 
+  // make an AJAX call to the twitter API using JSONP
   $.ajax({
         method: 'GET',
         url: url,
         dataType: "jsonp",
         timeout: 8000,
       }).done(function (result) {
-        console.log(result.html);
-        result_html = "<br><h1>Twitter Results</h1>" + result.html
+        // Include the resulting widget in the HTML DOM
+        result_html = "<br><h1>Twitter Results</h1>" + result.html;
         $('#twitter').html(result_html);
       }).fail(function (result) {
+        // Inform the user if there was no result.
+        // This can happen if the place is not on twitter
+        // or if an error occured during the API call
         result_html = "<br><h1>Twitter Results</h1>\
                       <h3 class='result-information'>\
                       Sorry, this place is either not on Twitter\
-                      or an error occured during API loading!</h3>"
+                      or an error occured during API loading!</h3>";
         $('#twitter').html(result_html);
       });
 }
 
+// #########################################################################
+// getFoursquare - This function retrieves the placeid of a place
+// #########################################################################
+
 function getFoursquare (position, name) {
+  // Adjust the name to find this place on Foursquare
   if (name == "Geek Dot Jewelry") {
-    name = "Paul Michael Design"
+    name = "Paul Michael Design";
   }
   var lat = position.lat();
   var lng = position.lng();
   var now = new Date();
-  now = formatDate(new Date())
-  var url = "https://api.foursquare.com/v2/venues/search"
+  // Get the date and format it so it can be used for the API call
+  now = formatDate(new Date());
+  var url = "https://api.foursquare.com/v2/venues/search";
+  // Include your Foursquare client_id and client_secret here
   url += '?' + $.param({
-    client_id: 'YOUR ID',
-    client_secret: 'YOUR SECRET',
+      client_id: 'YOUR ID',
+      client_secret: 'YOUR SECRET',
       'll' : lat + ',' + lng,
       'intent' : 'match',
       'name': name,
       'v': now
     }) + '&callback=?';
 
+  // Make an AJAX call to the Foursquare API using JSONP
   $.ajax({
         method: 'GET',
         url: url,
         dataType: "jsonp",
         timeout: 8000,
       }).done(function (result) {
+        // The API will return a result even if the status is not ok
+        // Hence, for error handling, the following message is shown to the
+        // user if an error occured during the API Call
         if (result.meta.code != 200) {
           result_html = "<br><h1>Foursquare Results</h1>" +
                         "<h3 class='result-information'>Sorry, the following error\
@@ -534,32 +531,44 @@ function getFoursquare (position, name) {
           $('#foursquare').html(result_html);
           return;
         }
+        // If there was no error but the place cannot be found on
+        // Foursquare - inform the user about this
         if (result.response.venues.length == 0) {
           result_html = "<br><h1>Foursquare Results</h1>" +
-                        "<h3 class='result-information'>Sorry, this place is not on Foursquare!</h3>"
+                        "<h3 class='result-information'>\
+                        Sorry, this place is not on Foursquare!</h3>";
           $('#foursquare').html(result_html);
           console.log("Not on Foursquare");
         } else {
+        // Use the retrieved place id to retrieve the relevant details
         getFoursquareDetails(result.response.venues[0].id);
       }
       }).fail(function (result) {
         result_html = "<br><h1>Foursquare Results</h1>" +
-                      "<h3 class='result-information'>Sorry, an error occured during API call. Please try again!</h3>"
+                      "<h3 class='result-information'>\
+                      Sorry, an error occured during API call.\
+                      Please try again!</h3>";
         $('#foursquare').html(result_html);
         console.log("Error");
       });
 }
 
+// #########################################################################
+// getFoursquareDetails - This function retrieves the details of a place
+// #########################################################################
+
 function getFoursquareDetails (id) {
   var now = new Date();
-  now = formatDate(new Date())
+  now = formatDate(new Date());
   var url = "https://api.foursquare.com/v2/venues/";
   url += id;
 
+  // Make an AJAX call using JSON
   $.ajax({
         url: url,
         dataType: "json",
         data: {
+          // Insert your client_id and client_secret here
           client_id: 'YOUR ID',
           client_secret: 'YOUR SECRET',
           v: now,
@@ -567,23 +576,27 @@ function getFoursquareDetails (id) {
         },
         timeout: 8000,
       }).done(function (result) {
+        // Retrieve the rating, the best photo, the description and user
+        // tips from Foursquare
+        var description = "";
         if (result.response.venue.description == undefined) {
-          var description = "No description on Foursquare."
+          description = "No description on Foursquare.";
         } else {
-          var description = result.response.venue.description
+          description = result.response.venue.description;
         }
-        var tips = "<h4 class='result-information-left'><strong>User Tips: </strong>"
+        var tips = "<h4 class='result-information-left'>\
+                    <strong>User Tips: </strong>";
         if (result.response.venue.tips.count == 0) {
-          tips += "There are no user tips for this place."
+          tips += "There are no user tips for this place.";
         } else {
-          tips += "<ul>"
-          for(i=0; i < result.response.venue.tips.groups[0].items.length; i++) {
+          tips += "<ul>";
+          for (i = 0; i < result.response.venue.tips.groups[0].items.length; i++) {
               tips += "<li>" + result.response.venue.tips.groups[0].items[i].text +
-                      "</li>"
+                      "</li>";
           }
-          tips += "</ul>"
+          tips += "</ul>";
         }
-        tips += "</h4>"
+        tips += "</h4>";
         var photoPrefix = result.response.venue.bestPhoto.prefix;
         var photoSize = "600x400";
         var photoSuffix = result.response.venue.bestPhoto.suffix;
@@ -591,19 +604,27 @@ function getFoursquareDetails (id) {
 
         result_html = "<br><h1>Foursquare Results</h1>" +
                       "<h4 class='result-information'><strong>Rating: </strong>" +
-                      result.response.venue.rating + "<br><br><div class='result-information'>\
-                      <img class='venue-img' alt='Picture of Venue' src=" + photo +
-                      "></div></h4> \
-                      <h4 class='result-information-left'><strong>Description: </strong>" +
-                      description + "</h4>" + tips
+                      result.response.venue.rating + "<br><br>\
+                      <div class='result-information'>\
+                      <img class='venue-img' alt='Picture of Venue' src=" +
+                      photo + "></div></h4><h4 class='result-information-left'>\
+                      <strong>Description: </strong>" +
+                      description + "</h4>" + tips;
         $('#foursquare').html(result_html);
 
       }).fail(function (result) {
-        // result_html = "<br><h1>Twitter Results</h1><h3 class='result-information'>Sorry, this place is not on Twitter!</h3>"
-        // $('#twitter').html(result_html);
-        console.log("error");
+        result_html = "<br><h1>Foursquare Results</h1>" +
+                      "<h3 class='result-information'>\
+                      Sorry, an error occured during API call.\
+                      Please try again!</h3>";
+        $('#foursquare').html(result_html);
+        console.log("Error");
       });
 }
+
+// #########################################################################
+// formatDate - format the date according to the Foursquare API requirements
+// #########################################################################
 
 function formatDate (date) {
 

@@ -489,6 +489,9 @@ function createTwitterFeed(place) {
 // getFoursquare - This function retrieves the placeid of a place
 // #########################################################################
 
+var client_id = 'YOUR ID';
+var client_secret = 'YOUR SECRET';
+
 function getFoursquare (position, name) {
   // Adjust the name to find this place on Foursquare
   if (name == "Geek Dot Jewelry") {
@@ -502,8 +505,8 @@ function getFoursquare (position, name) {
   var url = "https://api.foursquare.com/v2/venues/search";
   // Include your Foursquare client_id and client_secret here
   url += '?' + $.param({
-      client_id: 'YOUR ID',
-      client_secret: 'YOUR SECRET',
+      client_id: client_id,
+      client_secret: client_secret,
       'll' : lat + ',' + lng,
       'intent' : 'match',
       'name': name,
@@ -569,8 +572,8 @@ function getFoursquareDetails (id) {
         dataType: "json",
         data: {
           // Insert your client_id and client_secret here
-          client_id: 'YOUR ID',
-          client_secret: 'YOUR SECRET',
+          client_id: client_id,
+          client_secret: client_secret,
           v: now,
           async: true
         },

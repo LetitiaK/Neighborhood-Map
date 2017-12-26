@@ -35,4 +35,4 @@ Run the code by opening the index.html with a browser
 ## Troubleshooting
 
 * **The Twitter API does not work correctly**: Please disable the Adblocker in your Browser and refresh the page. The Adbloker often blocks the Twitter Widget from loading correctly.
-* **The Foursquare API does not work correctly**: Please make sure that you have entered your Client ID and Client Secret at **BOTH** places in the code (Function **getFoursquare** and Function **getFoursquareDetails**).
+* **The Foursquare API does not work correctly**: Please make sure that you have entered your Client ID and Client Secret correctly.

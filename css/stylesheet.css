@@ -141,6 +141,14 @@ input {
    min-height: 800px;
  }
 
+ #twitter.false {
+   margin-top: 850px;
+ }
+
+ #foursquare.false {
+   margin-top: 850px;
+ }
+
  .map-view.closed {
    margin-top: -50px;
  }

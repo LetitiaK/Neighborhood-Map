@@ -129,8 +129,8 @@ var myViewModel = function() {
       var category = result[0].id.category;
       showListings(name, "name");
       createInfoWindowFromList(this, position, address, category);
-      console.log(this.name());
       createTwitterFeed(this.name());
+      getForsquare(position, this.name());
     };
 
     this.placeSearch = ko.observable("");
@@ -305,7 +305,7 @@ function initMap() {
 
          marker.addListener('click', function() {
            populateInfoWindow(this, largeInfowindow, address, category);
-           createTwitterFeed();
+           createTwitterFeed(this.title);
          });
        } else {
          console.log("There was a problem");
@@ -353,7 +353,7 @@ function createInfoWindowFromList(marker, position, address, category) {
    infowindow = new google.maps.InfoWindow();
    if (infowindow.marker != marker) {
      infowindow.marker = marker;
-     infowindow.setContent('<div><p>' + marker.name() + ' -- ' + category + '</p><p>' + address + '</p></div>');
+     infowindow.setContent('<div><p>' + marker.name() + ' -- ' + category + '</p><p>' + address + '</p><p>Scroll down for more information!</p></div>');
      infowindow.setPosition(position);
      infowindow.open(map);
      infowindow.addListener('closeclick', function() {
@@ -367,9 +367,12 @@ function createInfoWindowFromList(marker, position, address, category) {
 
 // Create the infowindow and add the name, category and address
 function populateInfoWindow(marker, infowindow, address, category) {
+  var $url = 'http://maps.googleapis.com/maps/api/streetview?size=250x150&location='+ address;
+  var img = ["<img src=' " + $url + " '>"];
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent('<div><p>' + marker.title + ' -- ' + category + '</p><p>' + address + '</p></div>');
+    infowindow.setContent('<div><p>' + marker.title + ' -- ' + category +
+                          '</p><p>' + address + '<br><br>' + img + '</p><p>Scroll down for more information!</p></div>');
     infowindow.open(map, marker);
     infowindow.addListener('closeclick', function() {
     infowindow.marker = null;
@@ -462,6 +465,11 @@ function showAllListings(array) {
   map.fitBounds(bounds);
 }
 
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+// This function creates a Twitter feed for the respective place
+// below the map
 function createTwitterFeed(place) {
   if (place == "Carnegie Science Center") {
     place = "CarnegieSciCtr"
@@ -481,12 +489,113 @@ function createTwitterFeed(place) {
         dataType: "jsonp",
         timeout: 8000,
       }).done(function(result) {
-        console.log(result.html);
         result_html = "<br><h1>Twitter Results</h1>" + result.html
         $('#twitter').html(result_html);
       }).fail(function(result) {
-        result_html = "<br><h1>Twitter Results</h1><h3 class='result-information'>Sorry, this place is not on Twitter!</h3>" 
+        result_html = "<br><h1>Twitter Results</h1><h3 class='result-information'>Sorry, this place is not on Twitter!</h3>"
         $('#twitter').html(result_html);
+      });
+}
+
+function getForsquare(position, name) {
+  var lat = position.lat();
+  var lng = position.lng();
+  var now = new Date();
+  now = formatDate(new Date())
+  var url = "https://api.foursquare.com/v2/venues/search"
+  url += '?' + $.param({
+      'client_id' : 'YOUR CLIENT ID HERE',
+      'client_secret' : 'YOUR CLIENT SECRET HERE',
+      'll' : lat + ',' + lng,
+      'intent' : 'match',
+      'name': name,
+      'v': now
+    }) + '&callback=?';
+
+  $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: "jsonp",
+        timeout: 8000,
+      }).done(function(result) {
+        if (result.response.venues.length == 0) {
+          result_html = "<br><h1>Foursquare Results</h1>" +
+                        "<h3 class='result-information'>Sorry, this place is not on Foursquare!</h3>"
+          $('#foursquare').html(result_html);
+          console.log("Not on forsquare");
+        } else {
+        getForsquareDetails(result.response.venues[0].id);
+      }
+      }).fail(function(result) {
+        result_html = "<br><h1>Foursquare Results</h1>" +
+                      "<h3 class='result-information'>Sorry, an error occured during API call. Please try again!</h3>"
+        $('#foursquare').html(result_html);
+        console.log("Error");
+      });
+}
+
+function getForsquareDetails(id) {
+  var now = new Date();
+  now = formatDate(new Date())
+  var url = "https://api.foursquare.com/v2/venues/";
+  url += id;
+
+  $.ajax({
+        url: url,
+        dataType: "json",
+        data: {
+          'client_id' : 'YOUR CLIENT ID HERE',
+          'client_secret' : 'YOUR CLIENT SECRET HERE',
+          v: now,
+          async: true
+        },
+        timeout: 8000,
+      }).done(function(result) {
+        if (result.response.venue.description == undefined) {
+          var description = "No description on Foursquare."
+        } else {
+          var description = result.response.venue.description
+        }
+        var tips = "<h4 class='result-information-left'><strong>User Tips: </strong>"
+        if (result.response.venue.tips.count == 0) {
+          tips += "There are no user tips for this place."
+        } else {
+          tips += "<ul>"
+          for(i=0; i < result.response.venue.tips.groups[0].items.length; i++) {
+              tips += "<li>" + result.response.venue.tips.groups[0].items[i].text +
+                      "</li>"
+          }
+          tips += "</ul>"
+        }
+        tips += "</h4>"
+        var photoPrefix = result.response.venue.bestPhoto.prefix;
+        var photoSize = "600x400";
+        var photoSuffix = result.response.venue.bestPhoto.suffix;
+        var photo = String(photoPrefix) + photoSize + String(photoSuffix);
+        console.log(photo);
+
+      console.log(result.response.venue.bestPhoto);
+        result_html = "<br><h1>Foursquare Results</h1>" +
+                      "<h4 class='result-information'><strong>Rating: </strong>" +
+                      result.response.venue.rating + "<br><br><div class='result-information'>\
+                      <img class='venue-img' alt='Picture of Venue' src=" + photo +
+                      "></div></h4> \
+                      <h4 class='result-information-left'><strong>Description: </strong>" +
+                      description + "</h4>" + tips
+        $('#foursquare').html(result_html);
+
+      }).fail(function(result) {
+        // result_html = "<br><h1>Twitter Results</h1><h3 class='result-information'>Sorry, this place is not on Twitter!</h3>"
+        // $('#twitter').html(result_html);
         console.log("error");
       });
+}
+
+function formatDate(date) {
+
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  return String(year) + String(month) + String(day);
 }

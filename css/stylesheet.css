@@ -152,6 +152,16 @@ input {
    margin-top: 850px;
  }
 
+ @media screen and (max-width: 767px){
+  #foursquare.false {
+    position: relative;
+    margin-top: 50px;
+  }
+  #twitter.false {
+    position: relative;
+  }
+}
+
  .map-view.closed {
    margin-top: -50px;
  }

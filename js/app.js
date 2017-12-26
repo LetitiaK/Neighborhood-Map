@@ -130,7 +130,7 @@ var myViewModel = function() {
       showListings(name, "name");
       createInfoWindowFromList(this, position, address, category);
       createTwitterFeed(this.name());
-      getForsquare(position, this.name());
+      getFoursquare(position, this.name());
     };
 
     this.placeSearch = ko.observable("");
@@ -306,6 +306,7 @@ function initMap() {
          marker.addListener('click', function() {
            populateInfoWindow(this, largeInfowindow, address, category);
            createTwitterFeed(this.title);
+           getFoursquare(this.position, this.title);
          });
        } else {
          console.log("There was a problem");
@@ -350,10 +351,12 @@ function createInfoWindowFromList(marker, position, address, category) {
    if (infowindow) {
      infowindow.close();
    }
+   img = getGoogleStreetView(address);
    infowindow = new google.maps.InfoWindow();
    if (infowindow.marker != marker) {
      infowindow.marker = marker;
-     infowindow.setContent('<div><p>' + marker.name() + ' -- ' + category + '</p><p>' + address + '</p><p>Scroll down for more information!</p></div>');
+     infowindow.setContent('<div><p>' + marker.name() + ' -- ' + category +
+                           '</p><p>' + address + '<br><br>' + img + '</p><p>Scroll down for more information!</p></div>');
      infowindow.setPosition(position);
      infowindow.open(map);
      infowindow.addListener('closeclick', function() {
@@ -367,8 +370,7 @@ function createInfoWindowFromList(marker, position, address, category) {
 
 // Create the infowindow and add the name, category and address
 function populateInfoWindow(marker, infowindow, address, category) {
-  var $url = 'http://maps.googleapis.com/maps/api/streetview?size=250x150&location='+ address;
-  var img = ["<img src=' " + $url + " '>"];
+  img = getGoogleStreetView(address);
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
     infowindow.setContent('<div><p>' + marker.title + ' -- ' + category +
@@ -380,6 +382,11 @@ function populateInfoWindow(marker, infowindow, address, category) {
   }
 }
 
+function getGoogleStreetView(address) {
+  var $url = 'http://maps.googleapis.com/maps/api/streetview?size=250x150&location='+ address;
+  var img = ["<img src=' " + $url + " '>"];
+  return img;
+}
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
@@ -497,15 +504,15 @@ function createTwitterFeed(place) {
       });
 }
 
-function getForsquare(position, name) {
+function getFoursquare(position, name) {
   var lat = position.lat();
   var lng = position.lng();
   var now = new Date();
   now = formatDate(new Date())
   var url = "https://api.foursquare.com/v2/venues/search"
   url += '?' + $.param({
-      'client_id' : 'YOUR CLIENT ID HERE',
-      'client_secret' : 'YOUR CLIENT SECRET HERE',
+      client_id: 'YOUR ID',
+      client_secret: 'YOUR SECRET',
       'll' : lat + ',' + lng,
       'intent' : 'match',
       'name': name,
@@ -518,13 +525,24 @@ function getForsquare(position, name) {
         dataType: "jsonp",
         timeout: 8000,
       }).done(function(result) {
+        if (result.meta.code != 200) {
+          result_html = "<br><h1>Foursquare Results</h1>" +
+                        "<h3 class='result-information'>Sorry, the following error\
+                         occured during API call. Please try again or check\
+                         below for more details!</h3><br><p>Error Code: " +
+                         result.meta.code + "</p><p>Error Type: " +
+                         result.meta.errorType + "</p><p>Error Details: " +
+                         result.meta.errorDetail + "</p>";
+          $('#foursquare').html(result_html);
+          return;
+        }
         if (result.response.venues.length == 0) {
           result_html = "<br><h1>Foursquare Results</h1>" +
                         "<h3 class='result-information'>Sorry, this place is not on Foursquare!</h3>"
           $('#foursquare').html(result_html);
-          console.log("Not on forsquare");
+          console.log("Not on Foursquare");
         } else {
-        getForsquareDetails(result.response.venues[0].id);
+        getFoursquareDetails(result.response.venues[0].id);
       }
       }).fail(function(result) {
         result_html = "<br><h1>Foursquare Results</h1>" +
@@ -534,7 +552,7 @@ function getForsquare(position, name) {
       });
 }
 
-function getForsquareDetails(id) {
+function getFoursquareDetails(id) {
   var now = new Date();
   now = formatDate(new Date())
   var url = "https://api.foursquare.com/v2/venues/";
@@ -544,8 +562,8 @@ function getForsquareDetails(id) {
         url: url,
         dataType: "json",
         data: {
-          'client_id' : 'YOUR CLIENT ID HERE',
-          'client_secret' : 'YOUR CLIENT SECRET HERE',
+          client_id: 'YOUR ID',
+          client_secret: 'YOUR SECRET',
           v: now,
           async: true
         },

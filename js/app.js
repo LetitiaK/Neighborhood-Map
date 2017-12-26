@@ -1,109 +1,90 @@
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// DATA
+// #########################################################################
 
 // This list contains the 5 places wich I initially chose to be displayed
 // on the map
 var geekyPlaces = [
-  {
-    name: 'Eide\'s Entertainment',
+  { name: 'Eide\'s Entertainment',
     address: '1121 Penn Ave, Pittsburgh, PA 15222, USA',
-    category: 'Comic Book Shop'
-  },
-  {
-    name: 'Geekadrome',
+    category: 'Comic Book Shop' },
+  { name: 'Geekadrome',
     address: '534 Brookline Blvd, Pittsburgh, PA 15226, USA',
-    category: 'Comic Book Shop'
-  },
-  {
-    name: 'Geek Dot Jewelry',
+    category: 'Comic Book Shop'},
+  { name: 'Geek Dot Jewelry',
     address: '3453 Butler Street, Lawrenceville, PA 15201, USA',
-    category: 'Jewelry Shop'
-  },
-  {
-    name: 'Hot Haute Hot',
+    category: 'Jewelry Shop' },
+  { name: 'Hot Haute Hot',
     address: '2124 Penn Ave, Pittsburgh, PA 15222, USA',
-    category: 'Jewelry Shop'
-  },
-  {
-    name: 'Carnegie Science Center',
+    category: 'Jewelry Shop' },
+  { name: 'Carnegie Science Center',
     address: '1 Allegheny Ave, Pittsburgh, PA 15212, USA',
-    category: 'Museum'
-  },
-  {
-    name: 'ToonSeum',
+    category: 'Museum' },
+  { name: 'ToonSeum',
     address: '945 Liberty Ave, Pittsburgh, PA 15222, USA',
-    category: 'Museum'
-  },
-  {
-    name: 'Steel City Con',
+    category: 'Museum' },
+  { name: 'Steel City Con',
     address: '209 Mall Plaza Blvd, Monroeville, PA 15146, USA',
-    category: 'Comic Con'
-  },
-  {
-    name: '3 RIVERS COMICON',
+    category: 'Comic Con' },
+  { name: '3 RIVERS COMICON',
     address: '3075 Old Clairton Rd., West Mifflin, PA 15123, USA',
-    category: 'Comic Con'
-  },
-  {
-    name: 'Victory Pointe Arcade and Gaming Cafe',
+    category: 'Comic Con' },
+  { name: 'Victory Pointe Arcade and Gaming Cafe',
     address: '1113 E Carson St, Pittsburgh, PA 15203, USA',
-    category: 'Cafè and Gambling Hall'
-  },
-  {
-    name: 'Games N\' At',
+    category: 'Cafè and Gambling Hall' },
+  { name: 'Games N\' At',
     address: '2010 Josephine St, Pittsburgh, PA 15203, USA',
-    category: 'Cafè and Gambling Hall'
-  },
-  {
-    name: 'Kickback Pinball Cafe',
+    category: 'Cafè and Gambling Hall' },
+  { name: 'Kickback Pinball Cafe',
     address: '4326 Butler St, Pittsburgh, PA 15201, USA',
-    category: 'Cafè and Gambling Hall'
-  }
+    category: 'Cafè and Gambling Hall' }
 ];
 
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
+// #########################################################################
+// ViewModel
+// #########################################################################
 
-// This is the ViewModel of my project
-var myViewModel = function() {
-    var self = this;
+var myViewModel = function () {
+  var self = this;
 
-    // Determine whether the side menu ought to be shown or not
-    // This is important for usability on smaller devices
-    this.showSideMenu = ko.observable(false);
-    this.closeMenu = function() {
+  // Determine whether the side menu ought to be shown or not
+  // This is important for usability on smaller devices
+  this.showSideMenu = ko.observable(false);
+    this.closeMenu = function () {
       if (this.showSideMenu()) {
         this.showSideMenu(false);
       } else {
         this.showSideMenu(true);
-        // Resize the map in order to prevent grey side bar
+        // Resize the map in order to prevent a grey area on the right side
         google.maps.event.trigger(map, 'resize');
       }
-    }
+    };
 
      // This knockout observable is used to toggle the list of all places
+     // when the user clicks the button. In this way the whole list can be
+     // hidden or shown
      this.showPlaceList = ko.observable(false);
      // If the knockout observable is true, the list is shown
      // else, the list is hidden
-     this.closeList = function() {
+     this.closeList = function () {
        showAllListings(markers);
        if (this.showPlaceList()) {
          this.showPlaceList(false);
        } else {
          this.showPlaceList(true);
        }
-     }
+     };
 
     // Create a Knockout observable Array for all the geeky places
     this.geekPlaceList = ko.observableArray([]);
 
     // Add each geeky place listed in the inital list to the observable Array
-    geekyPlaces.forEach(function(geekyPlace) {
+    geekyPlaces.forEach(function (geekyPlace) {
       self.geekPlaceList.push( new GeekPlace(geekyPlace));
     });
 
     // Sort the array of geeky Places alphabetically based on the name
-    function myCompareFunction(a,b){
+    function myCompareFunction (a,b){
       if (a.name() < b.name()){
         return -1;
       } else if (a.name() > b.name()) {
@@ -118,16 +99,20 @@ var myViewModel = function() {
     this.currentPlace = ko.observable(this.geekPlaceList()[0]);
 
     // Function to select a place from the list
+    // (i.e. by clicking on the sidebar)
     // If the place is selected the infowindow is opened over the place
     this.setSelectedPlace = function () {
       name = this.name();
-      var result = markers.filter(function(marker) {
+      var result = markers.filter(function (marker) {
         return marker.title == name;
       });
       var position = result[0].position;
       var address = result[0].id.address;
       var category = result[0].id.category;
+      // The inforwindow is shown, as well as the Twitter feed
+      // and the Foursquare information
       showListings(name, "name");
+
       createInfoWindowFromList(this, position, address, category);
       createTwitterFeed(this.name());
       getFoursquare(position, this.name());
@@ -141,7 +126,7 @@ var myViewModel = function() {
 ///////////////////////////////////////////////////////////////////////////
 
 // This is the Model (data) of my project
-var GeekPlace = function(geekyPlace) {
+var GeekPlace = function (geekyPlace) {
   this.name = ko.observable(geekyPlace.name);
   this.address = ko.observable(geekyPlace.address);
   this.category = ko.observable(geekyPlace.category);
@@ -161,7 +146,7 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
     var self = this;
     var filter = self.placeSearch().toLowerCase();
     if (filter) {
-      return ko.utils.arrayFilter(self.geekPlaceList(), function(geekyPlace) {
+      return ko.utils.arrayFilter(self.geekPlaceList(), function (geekyPlace) {
         var string = geekyPlace.name().toLowerCase();
         var result = (string.search(filter) >= 0);
         geekyPlace.visible(result);
@@ -199,7 +184,7 @@ var map;
 var geocoder;
 var markers = [];
 
-function initMap() {
+function initMap () {
     var styles =
     [
       {
@@ -287,12 +272,12 @@ function initMap() {
    geocoder = new google.maps.Geocoder();
 
    // Iterate through the list and assingn a marker to each place
-   geekyPlaces.forEach(function(geekyPlace) {
+   geekyPlaces.forEach(function (geekyPlace) {
      var address = geekyPlace.address;
      var name = geekyPlace.name;
      var category = geekyPlace.category;
 
-     geocoder.geocode( {'address': address}, function(results, status) {
+     geocoder.geocode( {'address': address}, function (results, status) {
        if (status == 'OK') {
          var marker = new google.maps.Marker({
            position: results[0].geometry.location,
@@ -303,7 +288,11 @@ function initMap() {
 
          markers.push(marker);
 
-         marker.addListener('click', function() {
+         marker.addListener('click', function () {
+           for (var i = 0; i < markers.length; i++) {
+              markers[i].setAnimation(null);
+           }
+           marker.setAnimation(google.maps.Animation.BOUNCE);
            populateInfoWindow(this, largeInfowindow, address, category);
            createTwitterFeed(this.title);
            getFoursquare(this.position, this.title);
@@ -312,7 +301,7 @@ function initMap() {
          console.log("There was a problem");
          console.log(status);
          alert("Not all markers could be loaded correctly. \
-         Perhabs you have reached the limit of possible markers per day.")
+         Perhabs you have reached the limit of possible markers per day.");
        }
 
        // Place the markers on the map and make sure the boundaries fit
@@ -344,14 +333,14 @@ function initMap() {
 
 var infowindow = null;
 // Function to open an infowindow by clicking on the entry in the list
-function createInfoWindowFromList(marker, position, address, category) {
+function createInfoWindowFromList (marker, position, address, category) {
   // If there is already an infowindow open from another location
   // it is closed automatically, so that there is always only one
   // InfoWindow open
    if (infowindow) {
      infowindow.close();
    }
-   img = getGoogleStreetView(address);
+   img = getGoogleStreetView (address);
    infowindow = new google.maps.InfoWindow();
    if (infowindow.marker != marker) {
      infowindow.marker = marker;
@@ -359,8 +348,9 @@ function createInfoWindowFromList(marker, position, address, category) {
                            '</p><p>' + address + '<br><br>' + img + '</p><p>Scroll down for more information!</p></div>');
      infowindow.setPosition(position);
      infowindow.open(map);
-     infowindow.addListener('closeclick', function() {
-     infowindow.marker = null;
+     infowindow.addListener('closeclick', function () {
+       marker.setAnimation(null);
+       infowindow.marker = null;
      });
    }
 }
@@ -376,8 +366,9 @@ function populateInfoWindow(marker, infowindow, address, category) {
     infowindow.setContent('<div><p>' + marker.title + ' -- ' + category +
                           '</p><p>' + address + '<br><br>' + img + '</p><p>Scroll down for more information!</p></div>');
     infowindow.open(map, marker);
-    infowindow.addListener('closeclick', function() {
-    infowindow.marker = null;
+    infowindow.addListener('closeclick', function () {
+      marker.setAnimation(null);
+      infowindow.marker = null;
     });
   }
 }
@@ -404,22 +395,22 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
-document.getElementById('show-listings-all').addEventListener('click', function() {
+document.getElementById('show-listings-all').addEventListener('click', function () {
   showAllListings(markers);
 }, false);
-document.getElementById('show-listings-cafe').addEventListener('click', function() {
+document.getElementById('show-listings-cafe').addEventListener('click', function () {
   showListings("Cafè and Gambling Hall", "category");
   }, false);
-document.getElementById('show-listings-comic-book').addEventListener('click', function() {
+document.getElementById('show-listings-comic-book').addEventListener('click', function () {
   showListings("Comic Book Shop", "category");
   }, false);
-document.getElementById('show-listings-comic-con').addEventListener('click', function() {
+document.getElementById('show-listings-comic-con').addEventListener('click', function () {
   showListings("Comic Con", "category");
   }, false);
-document.getElementById('show-listings-jewelry').addEventListener('click', function() {
+document.getElementById('show-listings-jewelry').addEventListener('click', function () {
   showListings("Jewelry Shop", "category");
   }, false);
-document.getElementById('show-listings-museum').addEventListener('click', function() {
+document.getElementById('show-listings-museum').addEventListener('click', function () {
   showListings("Museum", "category");
   }, false);
 
@@ -495,10 +486,11 @@ function createTwitterFeed(place) {
         url: url,
         dataType: "jsonp",
         timeout: 8000,
-      }).done(function(result) {
+      }).done(function (result) {
+        console.log(result.html);
         result_html = "<br><h1>Twitter Results</h1>" + result.html
         $('#twitter').html(result_html);
-      }).fail(function(result) {
+      }).fail(function (result) {
         result_html = "<br><h1>Twitter Results</h1>\
                       <h3 class='result-information'>\
                       Sorry, this place is either not on Twitter\
@@ -507,7 +499,7 @@ function createTwitterFeed(place) {
       });
 }
 
-function getFoursquare(position, name) {
+function getFoursquare (position, name) {
   if (name == "Geek Dot Jewelry") {
     name = "Paul Michael Design"
   }
@@ -517,8 +509,8 @@ function getFoursquare(position, name) {
   now = formatDate(new Date())
   var url = "https://api.foursquare.com/v2/venues/search"
   url += '?' + $.param({
-      client_id: 'YOUR ID',
-      client_secret: 'YOUR SECRET',
+    client_id: 'YOUR ID',
+    client_secret: 'YOUR SECRET',
       'll' : lat + ',' + lng,
       'intent' : 'match',
       'name': name,
@@ -530,7 +522,7 @@ function getFoursquare(position, name) {
         url: url,
         dataType: "jsonp",
         timeout: 8000,
-      }).done(function(result) {
+      }).done(function (result) {
         if (result.meta.code != 200) {
           result_html = "<br><h1>Foursquare Results</h1>" +
                         "<h3 class='result-information'>Sorry, the following error\
@@ -550,7 +542,7 @@ function getFoursquare(position, name) {
         } else {
         getFoursquareDetails(result.response.venues[0].id);
       }
-      }).fail(function(result) {
+      }).fail(function (result) {
         result_html = "<br><h1>Foursquare Results</h1>" +
                       "<h3 class='result-information'>Sorry, an error occured during API call. Please try again!</h3>"
         $('#foursquare').html(result_html);
@@ -558,7 +550,7 @@ function getFoursquare(position, name) {
       });
 }
 
-function getFoursquareDetails(id) {
+function getFoursquareDetails (id) {
   var now = new Date();
   now = formatDate(new Date())
   var url = "https://api.foursquare.com/v2/venues/";
@@ -574,7 +566,7 @@ function getFoursquareDetails(id) {
           async: true
         },
         timeout: 8000,
-      }).done(function(result) {
+      }).done(function (result) {
         if (result.response.venue.description == undefined) {
           var description = "No description on Foursquare."
         } else {
@@ -606,14 +598,14 @@ function getFoursquareDetails(id) {
                       description + "</h4>" + tips
         $('#foursquare').html(result_html);
 
-      }).fail(function(result) {
+      }).fail(function (result) {
         // result_html = "<br><h1>Twitter Results</h1><h3 class='result-information'>Sorry, this place is not on Twitter!</h3>"
         // $('#twitter').html(result_html);
         console.log("error");
       });
 }
 
-function formatDate(date) {
+function formatDate (date) {
 
   var day = date.getDate();
   var month = date.getMonth() + 1;

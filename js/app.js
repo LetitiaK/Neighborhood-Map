@@ -508,6 +508,9 @@ function createTwitterFeed(place) {
 }
 
 function getFoursquare(position, name) {
+  if (name == "Geek Dot Jewelry") {
+    name = "Paul Michael Design"
+  }
   var lat = position.lat();
   var lng = position.lng();
   var now = new Date();

@@ -1,138 +1,146 @@
+/*Table of Contents
+  1. Global
+  2. Side-Menu
+  3. Map
+
+/*Global*/
+.container {
+  height: 100%;
+  position: relative;
+  width: 90%;
+}
+
+h1 {
+  color: #000;
+  font-family: 'Amatic SC', cursive;
+  font-size: 50px;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
 html,
- body {
+body {
    font-family: Arial, sans-serif;
    height: 100%;
    margin: 0;
    padding: 0;
  }
 
- .menu {
-   width: 40px;
-   height: 40px;
-   padding: 0;
-   margin-left: 0;
-   margin-top: -15px;
- }
+/*Side-Menu*/
+.form-control {
+  margin-top: 10px;
+  width: 90%;
+}
 
- .container {
-   height: 100%;
-   width: 90%;
-   position: relative;
- }
+.information {
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+  margin-bottom: -10px;
+}
 
- input {
-   font-size: 12px;
- }
+input {
+  font-size: 12px;
+}
 
- h1 {
-   color: #000;
-   font-size: 50px;
-   margin: 0 0 10px 0;
-   text-align: center;
-   font-family: 'Amatic SC', cursive;
- }
+.listing {
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+}
+
+.list-element {
+  margin-bottom: -15px;
+}
+
+.listing.closed {
+  display: none;
+}
+
+.listing.open {
+  display: block;
+}
+
+.menu {
+  height: 40px;
+  margin-left: 0;
+  margin-top: -15px;
+  padding: 0;
+  width: 40px;
+}
+
+.options-box {
+  background: #000;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  line-height: 35px;
+  min-height: 810px;
+  padding: 10px 10px 30px 10px;
+  text-align: left;
+  width: 340px;
+}
+
+.options-box.closed {
+  display: none;
+}
+
+.options-box.open {
+  display: block;
+}
+
+.options-box-small {
+  background: #000;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  height: 10px;
+  line-height: 35px;
+  padding: 10px 10px 30px 10px;
+  text-align: left;
+  width: 340px;
+}
+
+.result-information {
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+}
+
+.result-information-left {
+  font-family: 'Raleway', sans-serif;
+}
 
  .show-listings {
-   width: 48%;
    background: #7dcdcd;
    margin-top: 10px;
+   width: 48%;
  }
 
+/*Map*/
  #map {
+   border-radius: 10px;
    bottom: 0;
-   min-height: 848px;
    left: 362px;
+   margin-bottom: 2px;
+   min-height: 848px;
    position: absolute;
    right: 0px;
-   border-radius: 10px;
-   margin-bottom: 2px;
  }
 
  #map.true {
+   border-radius: 10px;
    bottom: 0px;
-   min-height: 848px;
    left: 362px;
+   min-height: 848px;
    position: absolute;
    right: 0px;
-   border-radius: 10px;
  }
 
  #map.false {
-   min-height: 800px;
    border-radius: 10px;
    margin-bottom: -810px;
    margin-left: -360px;
+   min-height: 800px;
  }
 
  .map-view.closed {
    margin-top: -50px;
- }
-
- .options-box {
-   background: #000;
-   min-height: 810px;
-   line-height: 35px;
-   padding: 10px 10px 30px 10px;
-   text-align: left;
-   width: 340px;
-   border-bottom-left-radius: 10px;
-   border-bottom-right-radius: 10px;
- }
-
- .options-box-small {
-   background: #000;
-   height: 10px;
-   line-height: 35px;
-   padding: 10px 10px 30px 10px;
-   text-align: left;
-   width: 340px;
-   border-top-left-radius: 10px;
-   border-top-right-radius: 10px;
- }
-
- .options-box.open {
-   display: block;
- }
-
- .options-box.closed {
-   display: none;
- }
-
- .listing {
-   font-family: 'Raleway', sans-serif;
-   color: #fff;
-   font-size: 14px;
-   cursor: pointer;
- }
-
- .list-element {
-   margin-bottom: -15px;
- }
-
- .listing.open {
-   display: block;
- }
-
- .listing.closed {
-   display: none;
- }
-
- .information {
-   font-family: 'Raleway', sans-serif;
-   color: #fff;
-   margin-bottom: -10px;
- }
-
- .result-information {
-   font-family: 'Raleway', sans-serif;
-   text-align: center;
- }
-
- .result-information-left {
-   font-family: 'Raleway', sans-serif;
- }
-
- .form-control {
-   width: 90%;
-   margin-top: 10px;
  }

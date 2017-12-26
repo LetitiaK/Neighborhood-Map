@@ -142,10 +142,13 @@ input {
  }
 
  #twitter.false {
+   position: absolute;
    margin-top: 850px;
+   width: 90%;
  }
 
  #foursquare.false {
+   position: absolute;
    margin-top: 850px;
  }
 

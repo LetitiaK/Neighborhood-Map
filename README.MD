@@ -27,7 +27,7 @@ _Note that the explanations given below are for Windows 7_
 5. Enable the Google Maps Geocoding API under Google Maps APIs
 6. Select "Credentials"
 7. Retrieve your API Key
-8. Change the given key in the **index.html** file to your API key (The key can be found in the link in line 75)
+8. Change the given key in the **index.html** file to your API key (The key can be found in the index.html file in line 75)
 
 ### Run the Code
 Run the code by opening the index.html with a browser

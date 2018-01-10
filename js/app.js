@@ -156,22 +156,31 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
         if (result) {
           filteredPlaces.push(geekyPlace);
         }
+        console.log(filteredPlaces().length);
         // Push those markers to the filteredMarkers array that have a result
         // of true, i.e. that include the given filter
-        for (var i = 0; i < filteredPlaces().length; i++) {
-          for (var j = 0; j < markers.length; j++) {
-            if (filteredPlaces()[i].name() == markers[j].title) {
-              if (filteredMarkers.indexOf(markers[j]) < 0) {
-                filteredMarkers.push(markers[j]);
+        if (filteredPlaces().length > 0) {
+          for (var i = 0; i < filteredPlaces().length; i++) {
+            for (var j = 0; j < markers.length; j++) {
+              if (filteredPlaces()[i].name() == markers[j].title) {
+                if (filteredMarkers.indexOf(markers[j]) < 0) {
+                  filteredMarkers.push(markers[j]);
+                }
               }
             }
+            // Call the function showAllListings to show only those markers
+            // for which the filter is true
+            showAllListings(filteredMarkers);
           }
-          // Call the function showAllListings to show only those markers
-          // for which the filter is true
-          showAllListings(filteredMarkers);
+        // If the filter doesn't fit any listing all markers are deleted
+        } else {
+          hideAllListings();
         }
         return result;
       });
+    } else {
+      console.log("Hello World");
+      // showAllListings(markers);
     }
 }, vm);
 
@@ -440,6 +449,18 @@ function showAllListings(array) {
     bounds.extend(array[j].position);
   }
   map.fitBounds(bounds);
+}
+
+// #########################################################################
+// hideAllListings - delete all markers of all categories
+// #########################################################################
+
+function hideAllListings() {
+  var bounds = new google.maps.LatLngBounds();
+  // Delete all markers from the map
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
 }
 
 // #########################################################################

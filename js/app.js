@@ -113,6 +113,8 @@ var myViewModel = function () {
       // and the Foursquare information
       // To better show which place is selected only this marker is
       // visible and it is zoomed in
+      // In addition, the marker bounces
+      result[0].setAnimation(google.maps.Animation.BOUNCE);
       showListings(name, "name");
       createInfoWindowFromList(this, position, address, category);
       createTwitterFeed(this.name());

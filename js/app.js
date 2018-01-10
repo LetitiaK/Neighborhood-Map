@@ -156,7 +156,6 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
         if (result) {
           filteredPlaces.push(geekyPlace);
         }
-        console.log(filteredPlaces().length);
         // Push those markers to the filteredMarkers array that have a result
         // of true, i.e. that include the given filter
         if (filteredPlaces().length > 0) {
@@ -179,8 +178,9 @@ myViewModel.prototype.filterPlaces = ko.computed(function () {
         return result;
       });
     } else {
-      console.log("Hello World");
-      // showAllListings(markers);
+      if (markers) {
+        showAllListings(markers);
+      }
     }
 }, vm);
 

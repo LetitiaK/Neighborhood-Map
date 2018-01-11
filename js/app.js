@@ -279,8 +279,8 @@ function initMap () {
        } else {
          console.log("There was a problem");
          console.log(status);
-         alert("Not all markers could be loaded correctly. \
-         Perhabs you have reached the limit of possible markers per day.");
+         alert("Not all markers could be loaded correctly." +
+         "Perhabs you have reached the limit of possible markers per day.");
        }
 
        // Place the markers on the map and make sure the boundaries fit
@@ -317,10 +317,10 @@ function initMap () {
 // #########################################################################
 
 function mapErrorHandling() {
-  mapError("<h2>Sorry! Something went wrong when loading the Map.</h2>\
-            <p>Please try to load the page again!</p>\
-            <p>If the error cannot be solved please check whether the API URL\
-            is correct and a valid key is given.</p>");
+  mapError("<h2>Sorry! Something went wrong when loading the Map.</h2>" +
+            "<p>Please try to load the page again!</p>" +
+            "<p>If the error cannot be solved please check whether the API URL" +
+            "is correct and a valid key is given.</p>");
 }
 
 // #########################################################################
@@ -499,10 +499,10 @@ function createTwitterFeed(place) {
         // Inform the user if there was no result.
         // This can happen if the place is not on twitter
         // or if an error occured during the API call
-        result_html = "<br><h1>Twitter Results</h1>\
-                      <h3 class='result-information'>\
-                      Sorry, this place is either not on Twitter\
-                      or an error occured during API loading!</h3>";
+        result_html = "<br><h1>Twitter Results</h1>" +
+                      "<h3 class='result-information'>" +
+                      "Sorry, this place is either not on Twitter" +
+                      "or an error occured during API loading!</h3>";
         twitter(result_html);
       });
 }
@@ -549,9 +549,9 @@ function getFoursquare (position, name) {
         // user if an error occured during the API Call
         if (result.meta.code != 200) {
           result_html = "<br><h1>Foursquare Results</h1>" +
-                        "<h3 class='result-information'>Sorry, the following error\
-                         occured during API call. Please try again or check\
-                         below for more details!</h3><br><p>Error Code: " +
+                        "<h3 class='result-information'>Sorry, the following error" +
+                         "occured during API call. Please try again or check" +
+                         "below for more details!</h3><br><p>Error Code: " +
                          result.meta.code + "</p><p>Error Type: " +
                          result.meta.errorType + "</p><p>Error Details: " +
                          result.meta.errorDetail + "</p>";
@@ -560,10 +560,10 @@ function getFoursquare (position, name) {
         }
         // If there was no error but the place cannot be found on
         // Foursquare - inform the user about this
-        if (result.response.venues.length == 0) {
+        if (result.response.venues.length === 0) {
           result_html = "<br><h1>Foursquare Results</h1>" +
-                        "<h3 class='result-information'>\
-                        Sorry, this place is not on Foursquare!</h3>";
+                        "<h3 class='result-information'>" +
+                        "Sorry, this place is not on Foursquare!</h3>";
         foursquare(result_html);
           console.log("Not on Foursquare");
         } else {
@@ -572,9 +572,9 @@ function getFoursquare (position, name) {
       }
       }).fail(function (result) {
         result_html = "<br><h1>Foursquare Results</h1>" +
-                      "<h3 class='result-information'>\
-                      Sorry, an error occured during API call.\
-                      Please try again!</h3>";
+                      "<h3 class='result-information'>" +
+                      "Sorry, an error occured during API call." +
+                      "Please try again!</h3>";
       foursquare(result_html);
         console.log("Error");
       });
@@ -605,20 +605,20 @@ function getFoursquareDetails (id) {
         // Retrieve the rating, the best photo, the description and user
         // tips from Foursquare
         var rating = "";
-        if (result.response.venue.rating == undefined) {
+        if (result.response.venue.rating === undefined) {
           rating = "This venue has not been rated yet.";
         } else {
           rating = result.response.venue.rating;
         }
         var description = "";
-        if (result.response.venue.description == undefined) {
+        if (result.response.venue.description === undefined) {
           description = "No description on Foursquare.";
         } else {
           description = result.response.venue.description;
         }
-        var tips = "<h4 class='result-information-left'>\
-                    <strong>User Tips: </strong>";
-        if (result.response.venue.tips.count == 0) {
+        var tips = "<h4 class='result-information-left'>" +
+                    "<strong>User Tips: </strong>";
+        if (result.response.venue.tips.count === 0) {
           tips += "There are no user tips for this place.";
         } else {
           tips += "<ul>";
@@ -636,19 +636,19 @@ function getFoursquareDetails (id) {
 
         result_html = "<br><h1>Foursquare Results</h1>" +
                       "<h4 class='result-information'><strong>Rating: </strong>" +
-                      rating + "<br><br>\
-                      <div class='result-information'>\
-                      <img class='venue-img' alt='Picture of Venue' src=" +
-                      photo + "></div></h4><h4 class='result-information-left'>\
-                      <strong>Description: </strong>" +
+                      rating + "<br><br>" +
+                      "<div class='result-information'>" +
+                      "<img class='venue-img' alt='Picture of Venue' src=" +
+                      photo + "></div></h4><h4 class='result-information-left'>" +
+                      "<strong>Description: </strong>" +
                       description + "</h4>" + tips;
       foursquare(result_html);
 
       }).fail(function (result) {
         result_html = "<br><h1>Foursquare Results</h1>" +
-                      "<h3 class='result-information'>\
-                      Sorry, an error occured during API call.\
-                      Please try again!</h3>";
+                      "<h3 class='result-information'>" +
+                      "Sorry, an error occured during API call." +
+                      "Please try again!</h3>";
         foursquare(result_html);
         console.log("Error");
       });

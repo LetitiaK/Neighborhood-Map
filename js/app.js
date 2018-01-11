@@ -44,10 +44,10 @@ var geekyPlaces = [
 // ViewModel
 // #########################################################################
 
-var myViewModel = function () {
+var MyViewModel = function () {
   var self = this;
 
-  //
+  // Knockout observable to be used for error Handling of Google Maps API
   mapError = ko.observable();
 
   // Determine whether the side menu ought to be shown or not
@@ -143,11 +143,11 @@ var GeekPlace = function (geekyPlace) {
 // Live Search
 // #########################################################################
 
-var vm = new myViewModel();
+var vm = new MyViewModel();
 
 // Compute the places which fit to the given filter, i.e.
 // the user input in the search bar
-myViewModel.prototype.filterPlaces = ko.computed(function () {
+MyViewModel.prototype.filterPlaces = ko.computed(function () {
     var filteredPlaces = ko.observableArray([]);
     var filteredMarkers = ko.observableArray([]);
     var self = this;

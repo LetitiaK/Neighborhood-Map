@@ -297,8 +297,9 @@ function initMap () {
        }
        map.fitBounds(bounds);
 
+       // Add a addDomListener to ensure the bounds are responsive
        google.maps.event.addDomListener(window, 'resize', function() {
-         map.fitBounds(bounds); // `bounds` is a `LatLngBounds` object
+         map.fitBounds(bounds);
        });
 
      });

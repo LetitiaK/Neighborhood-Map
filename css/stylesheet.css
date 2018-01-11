@@ -158,6 +158,7 @@ input {
    min-height: 848px;
    position: absolute;
    right: 0px;
+   z-index: -1;
  }
 
  #mapError.true {

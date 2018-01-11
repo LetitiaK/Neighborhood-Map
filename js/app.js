@@ -47,6 +47,9 @@ var geekyPlaces = [
 var myViewModel = function () {
   var self = this;
 
+  //
+  mapError = ko.observable();
+
   // Determine whether the side menu ought to be shown or not
   // This is important for usability on smaller devices
   this.showSideMenu = ko.observable(false);
@@ -300,6 +303,17 @@ function initMap () {
      });
 
    });
+}
+
+// #########################################################################
+// Google Map Error Handling - in case the map does not load correctly
+// #########################################################################
+
+function mapErrorHandling() {
+  mapError("<h2>Sorry! Something went wrong when loading the Map.</h2>\
+            <p>Please try to load the page again!</p>\
+            <p>If the error cannot be solved please check whether the API URL\
+            is correct and a valid key is given.</p>");
 }
 
 // #########################################################################

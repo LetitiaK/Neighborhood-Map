@@ -54,13 +54,9 @@ var MyViewModel = function () {
   // This is important for usability on smaller devices
   this.showSideMenu = ko.observable(false);
     this.closeMenu = function () {
-      if (this.showSideMenu()) {
-        this.showSideMenu(false);
-      } else {
-        this.showSideMenu(true);
-        // Resize the map in order to prevent a grey area on the right side
-        google.maps.event.trigger(map, 'resize');
-      }
+      this.showSideMenu(!this.showSideMenu());
+      // Resize the map in order to prevent a grey area on the right side
+      google.maps.event.trigger(map, 'resize');
     };
 
      // This knockout observable is used to toggle the list of all places

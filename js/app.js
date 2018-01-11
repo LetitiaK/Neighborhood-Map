@@ -50,6 +50,12 @@ var MyViewModel = function () {
   // Knockout observable to be used for error Handling of Google Maps API
   mapError = ko.observable();
 
+  // Knockout observable to be used for the Twitter results
+  twitter = ko.observable();
+
+  // Knockout observable to be used for the Foursquare results
+  foursquare = ko.observable();
+
   // Determine whether the side menu ought to be shown or not
   // This is important for usability on smaller devices
   this.showSideMenu = ko.observable(false);
@@ -488,7 +494,7 @@ function createTwitterFeed(place) {
       }).done(function (result) {
         // Include the resulting widget in the HTML DOM
         result_html = "<br><h1>Twitter Results</h1>" + result.html;
-        $('#twitter').html(result_html);
+        twitter(result_html);
       }).fail(function (result) {
         // Inform the user if there was no result.
         // This can happen if the place is not on twitter
@@ -497,7 +503,7 @@ function createTwitterFeed(place) {
                       <h3 class='result-information'>\
                       Sorry, this place is either not on Twitter\
                       or an error occured during API loading!</h3>";
-        $('#twitter').html(result_html);
+        twitter(result_html);
       });
 }
 
@@ -547,7 +553,7 @@ function getFoursquare (position, name) {
                          result.meta.code + "</p><p>Error Type: " +
                          result.meta.errorType + "</p><p>Error Details: " +
                          result.meta.errorDetail + "</p>";
-          $('#foursquare').html(result_html);
+          foursquare(result_html);
           return;
         }
         // If there was no error but the place cannot be found on
@@ -556,7 +562,7 @@ function getFoursquare (position, name) {
           result_html = "<br><h1>Foursquare Results</h1>" +
                         "<h3 class='result-information'>\
                         Sorry, this place is not on Foursquare!</h3>";
-          $('#foursquare').html(result_html);
+        foursquare(result_html);
           console.log("Not on Foursquare");
         } else {
         // Use the retrieved place id to retrieve the relevant details
@@ -567,7 +573,7 @@ function getFoursquare (position, name) {
                       "<h3 class='result-information'>\
                       Sorry, an error occured during API call.\
                       Please try again!</h3>";
-        $('#foursquare').html(result_html);
+      foursquare(result_html);
         console.log("Error");
       });
 }
@@ -629,14 +635,14 @@ function getFoursquareDetails (id) {
                       photo + "></div></h4><h4 class='result-information-left'>\
                       <strong>Description: </strong>" +
                       description + "</h4>" + tips;
-        $('#foursquare').html(result_html);
+      foursquare(result_html);
 
       }).fail(function (result) {
         result_html = "<br><h1>Foursquare Results</h1>" +
                       "<h3 class='result-information'>\
                       Sorry, an error occured during API call.\
                       Please try again!</h3>";
-        $('#foursquare').html(result_html);
+        foursquare(result_html);
         console.log("Error");
       });
 }

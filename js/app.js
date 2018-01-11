@@ -107,9 +107,9 @@ var MyViewModel = function () {
     // (i.e. by clicking on the sidebar)
     // If the place is selected the infowindow is opened over the place
     this.setSelectedPlace = function () {
-      name = this.name();
+      place_name = this.name();
       var result = markers.filter(function (marker) {
-        return marker.title == name;
+        return marker.title == place_name;
       });
       var position = result[0].position;
       var address = result[0].id.address;
@@ -120,7 +120,7 @@ var MyViewModel = function () {
       // visible and it is zoomed in
       // In addition, the marker bounces
       result[0].setAnimation(google.maps.Animation.BOUNCE);
-      showListings(name, "name");
+      showListings(place_name, "name");
       createInfoWindowFromList(this, position, address, category);
       createTwitterFeed(this.name());
       getFoursquare(position, this.name());

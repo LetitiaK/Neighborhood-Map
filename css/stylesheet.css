@@ -22,7 +22,7 @@ h2 {
   color: #000;
   font-family: 'Amatic SC', cursive;
   font-size: 40px;
-  font-weight: bold; 
+  font-weight: bold;
   margin: 0 0 10px 0;
   text-align: center;
 }
@@ -150,12 +150,40 @@ input {
    min-height: 800px;
  }
 
+ #mapError {
+   border-radius: 10px;
+   bottom: 0;
+   left: 362px;
+   margin-bottom: 2px;
+   min-height: 848px;
+   position: absolute;
+   right: 0px;
+ }
+
+ #mapError.true {
+   border-radius: 10px;
+   bottom: 0px;
+   left: 362px;
+   min-height: 848px;
+   position: absolute;
+   right: 0px;
+ }
+
+ #mapError.false {
+   border-radius: 10px;
+   margin-bottom: -810px;
+   margin-left: -360px;
+   min-height: 800px;
+ }
+
+/*Twitter*/
  #twitter.false {
    position: absolute;
    margin-top: 850px;
    width: 90%;
  }
 
+/*Foursquare*/
  #foursquare.false {
    position: absolute;
    margin-top: 850px;

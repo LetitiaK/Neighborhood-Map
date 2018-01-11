@@ -595,7 +595,6 @@ function getFoursquareDetails (id) {
         url: url,
         dataType: "json",
         data: {
-          // Insert your client_id and client_secret here
           client_id: client_id,
           client_secret: client_secret,
           v: now,
@@ -605,6 +604,12 @@ function getFoursquareDetails (id) {
       }).done(function (result) {
         // Retrieve the rating, the best photo, the description and user
         // tips from Foursquare
+        var rating = "";
+        if (result.response.venue.rating == undefined) {
+          rating = "This venue has not been rated yet.";
+        } else {
+          rating = result.response.venue.rating;
+        }
         var description = "";
         if (result.response.venue.description == undefined) {
           description = "No description on Foursquare.";
@@ -631,7 +636,7 @@ function getFoursquareDetails (id) {
 
         result_html = "<br><h1>Foursquare Results</h1>" +
                       "<h4 class='result-information'><strong>Rating: </strong>" +
-                      result.response.venue.rating + "<br><br>\
+                      rating + "<br><br>\
                       <div class='result-information'>\
                       <img class='venue-img' alt='Picture of Venue' src=" +
                       photo + "></div></h4><h4 class='result-information-left'>\

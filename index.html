@@ -45,12 +45,18 @@
           </ul>
 
           <p class="information">Filter by Category:</p>
-          <input id="show-listings-all" class="btn show-listings" type="button" value="All Categories">
-          <input id="show-listings-cafe" class="btn show-listings" type="button" value="Cafè & Gambling Hall">
-          <input id="show-listings-comic-book" class="btn show-listings" type="button" value="Comic Book Shop">
-          <input id="show-listings-comic-con" class="btn show-listings" type="button" value="Comic Con">
-          <input id="show-listings-jewelry" class="btn show-listings" type="button" value="Jewelry Shop">
-          <input id="show-listings-museum" class="btn show-listings" type="button" value="Museum">
+          <input id="show-listings-all" class="btn show-listings" type="button"
+                 value="All Categories" data-bind="click: showAllListings.bind($data, markers)">
+          <input id="show-listings-cafe" class="btn show-listings" type="button"
+                 value="Cafè & Gambling Hall" data-bind="click: showListings.bind($data, 'Cafè and Gambling Hall', 'category')">
+          <input id="show-listings-comic-book" class="btn show-listings" type="button"
+                 value="Comic Book Shop" data-bind="click: showListings.bind($data, 'Comic Book Shop', 'category')">
+          <input id="show-listings-comic-con" class="btn show-listings" type="button"
+                 value="Comic Con" data-bind="click: showListings.bind($data, 'Comic Con', 'category')">
+          <input id="show-listings-jewelry" class="btn show-listings" type="button"
+                 value="Jewelry Shop" data-bind="click: showListings.bind($data, 'Jewelry Shop', 'category')">
+          <input id="show-listings-museum" class="btn show-listings" type="button"
+                 value="Museum" data-bind="click: showListings.bind($data, 'Museum', 'category')">
         </div>
       </div>
       <div class="row">

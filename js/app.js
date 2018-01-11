@@ -395,29 +395,6 @@ function makeMarkerIcon(markerColor) {
   return markerImage;
 }
 
-// The user can select to show only certain categories by clicking on the
-// respective buttons in the side bar
-// Then, only the markers of this category are shown
-document.getElementById('show-listings-all').addEventListener('click', function () {
-  showAllListings(markers);
-}, false);
-document.getElementById('show-listings-cafe').addEventListener('click', function () {
-  showListings("Cafè and Gambling Hall", "category");
-  }, false);
-document.getElementById('show-listings-comic-book').addEventListener('click', function () {
-  showListings("Comic Book Shop", "category");
-  }, false);
-document.getElementById('show-listings-comic-con').addEventListener('click', function () {
-  showListings("Comic Con", "category");
-  }, false);
-document.getElementById('show-listings-jewelry').addEventListener('click', function () {
-  showListings("Jewelry Shop", "category");
-  }, false);
-document.getElementById('show-listings-museum').addEventListener('click', function () {
-  showListings("Museum", "category");
-  }, false);
-
-
 // #########################################################################
 // showListings - Show selected listings from a certain category
 // #########################################################################
@@ -426,6 +403,7 @@ document.getElementById('show-listings-museum').addEventListener('click', functi
 // only those that are from a certain category
 function showListings(data, type) {
   var bounds = new google.maps.LatLngBounds();
+  var markerCheck = "";
   // Extend the boundaries of the map for each marker and display the marker
   for (var i = 0; i < markers.length; i++) {
     switch (type) {

@@ -535,6 +535,8 @@ function getFoursquare (position, name) {
       'v': now
     }) + '&callback=?';
 
+    console.log(url);
+
   // Make an AJAX call to the Foursquare API using JSONP
   $.ajax({
         method: 'GET',
@@ -655,7 +657,10 @@ function formatDate (date) {
 
   var day = date.getDate();
   var month = date.getMonth() + 1;
+  if (month < 10) {
+    month = "0" + String(month);
+  }
   var year = date.getFullYear();
 
-  return String(year) + String(month) + String(day);
+  return String(year) + month + String(day);
 }
